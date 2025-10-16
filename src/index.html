@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Airport Flight Data</title>
+  <link rel="stylesheet" href="style.css"/>
+    <script src="app.js"></script>
+</head>
+<body>
+    <h1>Airport Flight Data</h1>
+    <p>By Jasper, Larray, Pamela</p>
+   
+    <h2>Choose Your Data View</h2>
+    <!--Select element changes what content is inside dataViewElements div for each view. 
+    Add each view as an option to select-->
+    <label for="view">Display By:</label>
+    <select name="view" id="viewSelect">
+        <option value="delayNum">Number of Delays</option>
+    </select> 
+
+    <!--Put Buttons, Drop Downs, Inputs, etc. for your views here-->
+    <div id="dataViewElements" class="filterElements">
+        <!--Put divs of your section that are change CSS display to none when not selected selected and block when selected-->
+        <div id="numFlightView">
+            <button></button>
+            
+        </div>
+    </div>
+
+    <!--Change according to what your view is-->
+    <h2 id="dataTitle"></h2>
+
+    <!--Replace child elemnts of the div with the elements required of your view after a submit-->
+    <!--A table, ordered list, unordered list, etc. Depends on implementation-->
+    <div id="dataDisplay">
+
+    </div>
+</body>
+</html>
