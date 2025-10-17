@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Airport Flight Data</title>
   <link rel="stylesheet" href="style.css"/>
-    <script src="app.js"></script>
 </head>
 <body>
     <h1>Airport Flight Data</h1>
@@ -16,7 +15,9 @@
     Add each view as an option to select-->
     <label for="view">Display By:</label>
     <select name="view" id="viewSelect">
+        <option value="none" selected disabled hidden>Select a View</option>
         <option value="delayNum">Number of Delays</option>
+        <option value="carrier">Carrier</option>
     </select> 
 
     <!--Put Buttons, Drop Downs, Inputs, etc. for your views here-->
@@ -37,4 +38,5 @@
 
     </div>
 </body>
+<script src="app.js"></script>
 </html>
