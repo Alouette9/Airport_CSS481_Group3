@@ -3,6 +3,27 @@ const dataTitle = document.getElementById("dataTitle");
 const dataDisplay = document.getElementById("dataDisplay");
 const viewSelect = document.getElementById("viewSelect");
 
+viewSelect.addEventListener('change', detectSelect);
+
+//Put set your buttons and displays displayed or hidden in dataViewElements div here!
+function detectSelect(event)
+{
+  if(event)
+  {
+    switch(event.target.value)
+    {
+      case "delayNum":
+        
+        break;
+      case "carrier":
+        
+        break;
+      default:
+        console.log('not found');
+    }
+  }
+}
+
 //Contains 20 samples. See categories in more detail at https://www.kaggle.com/datasets/jawadkhattak/us-flight-delay-from-january-2017-july-2022
 const jsonSample = [
   {
