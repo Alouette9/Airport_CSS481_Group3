@@ -13,8 +13,13 @@ function detectSelect(event)
     switch(event.target.value)
     {
       case "delayNum":
-        
+        displayByDelayNum(jsonSample);
         break;
+
+      case "delayTime":
+        displayByDelayTime(jsonSample);
+        break;
+     
       case "carrier":
         
         break;
