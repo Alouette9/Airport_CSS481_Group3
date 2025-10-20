@@ -35,6 +35,16 @@ function detectSelect(event)
   }
 }
 
+function displayByDelayTime(flightdata){
+
+  displayFlightItems(sortedFlights);
+}
+
+function displayByDelayNum(flightdata){
+
+  displayFlightItems(sortedFlights);
+}
+
 //Contains 20 samples. See categories in more detail at https://www.kaggle.com/datasets/jawadkhattak/us-flight-delay-from-january-2017-july-2022
 const jsonSample = [
   {
