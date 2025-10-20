@@ -35,13 +35,18 @@ function detectSelect(event)
   }
 }
 
-function displayByDelayTime(flightdata){
-
+//seems like no avg or total delay time calculated for this dataset
+function displayByDelayTime(flightdata){  
+   
   displayFlightItems(sortedFlights);
 }
 
 function displayByDelayNum(flightdata){
-
+  const sortedFlights = flightdata.sort((a,b) => {
+    if (a.arr_delay !== b.arr_delay){
+      return b.arr_delay - a.arr_delay;
+    }
+  })  
   displayFlightItems(sortedFlights);
 }
 
