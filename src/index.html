@@ -19,6 +19,7 @@
         <option value="delayNum">Number of Delays</option>
         <option value="delayTime">Time of Delays</option>
         <option value="carrier">Carrier</option>
+        <option value="delayReasons">Delay Reasons</option>
         <option value="date">Date</option>
         <option value="numFlights">Number of flights</option>
     </select> 
@@ -27,8 +28,59 @@
     <div id="dataViewElements" class="filterElements">
         <!--Put divs of your section that are change CSS display to none when not selected selected and block when selected-->
         <div id="numFlightView">
-            <button></button>
             
+        </div>
+        <div id="carrierView">
+            <div id="carrierCheckboxes">
+                <input type="checkbox" checked="true" id="carrierSelectAll" name="carrierSelectAll"></input>
+                <label for="carrierSelectAll">Select All</label> <br>
+            </div>
+            <label for="carrierOrderBy">Order By:</label>
+            <select name="carrierOrderBy" id="carrierOrderBy">
+                <option value="carrierName" selected>Carrier Name</option>
+                <option value="carrierFlights">Flights</option>
+                <option value="carrierDelayFlights">Delay Flights</option>
+                <option value="carrierDelayTime">Delay Time</option>
+                <option value="carrierLateFlights">Late Flights</option>
+                <option value="carrierLateTime">Late Time</option>
+                <option value="carrierCancelled">Cancelled Flights</option>
+                <option value="carrierDiverted">Diverted Flights</option>
+                <option value="carrierByDelay">Delays by Carrier</option>
+                <option value="carrierByDelayTime">Delay Time by Carrier</option>
+            </select>
+            <select name="carrierAscension" id="carrierAscension">
+                <option value="0" selected>Ascending</option>
+                <option value="1">Descending</option>
+            </select>
+
+            <button id="carrierSubmit">Submit</button>
+        </div>
+        <div id="delayReasonsView">
+            
+            <label for="carrierOrderBy">Order By:</label>
+            <select name="delayReasonsSelect" id="delayReasonsSelect">
+                <option value="allDelays" selected>All Data</option>
+                <option value="airportDelays">Airport</option>
+                <option value="carrierDelays">Carrier</option>
+            </select>
+
+            <div id="delayAirportCheckboxes">
+                <h3>Airports</h3>
+                <input type="checkbox" checked="true" id="delayAirportSelectAll" name="delayAirportSelectAll"></input>
+                <label for="delayAirportSelectAll">Select All</label> <br>
+            </div>
+            
+            <div id="delayCarrierCheckboxes">
+                <h3>Carriers</h3>
+                <input type="checkbox" checked="true" id="delayCarrierSelectAll" name="delayCarrierSelectAll"></input>
+                <label for="delayCarrierSelectAll">Select All</label> <br>
+            </div>
+            <br>
+            <label for="delayBeginMonth">Time Range: </label>
+            <input type="month" name="delayBeginMonth" id="delayBeginMonth">
+            to
+            <input type="month" name="delayEndMonth" id="delayEndMonth">
+            <button id="delayReasonsSubmit">Submit</button>
         </div>
     </div>
 
