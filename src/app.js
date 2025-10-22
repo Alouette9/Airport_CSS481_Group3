@@ -14,7 +14,10 @@ function detectSelect(event) {
   if (event) {
     switch (event.target.value) {
       case "delayNum":
-
+        displayByDelayNum(jsonSample);
+        break;
+      case "delayTime":
+        displayByDelayTime(jsonSample);
         break;
       case "carrier":
         carrierView.style.display = 'block';
@@ -22,6 +25,12 @@ function detectSelect(event) {
       case 'delayReasons':
       delayReasonsView.style.display = 'block';  
       break;
+      case "date":
+        displayFlightsByDate(jsonSample);
+        break;
+      case "numFlights":
+        displayByFlightNum(jsonSample);
+        break;
       default:
         console.log('not found');
     }
@@ -32,6 +41,21 @@ function detectSelect(event) {
   if (event.target.value !== 'delayReasons') {
     delayReasonsView.style.display = 'none';
   }
+}
+
+//seems like no avg or total delay time calculated for this dataset
+function displayByDelayTime(flightdata){  
+   
+  displayFlightItems(sortedFlights);
+}
+
+function displayByDelayNum(flightdata){
+  const sortedFlights = flightdata.sort((a,b) => {
+    if (a.arr_delay !== b.arr_delay){
+      return b.arr_delay - a.arr_delay;
+    }
+  })  
+  displayFlightItems(sortedFlights);
 }
 
 //Contains 20 samples. See categories in more detail at https://www.kaggle.com/datasets/jawadkhattak/us-flight-delay-from-january-2017-july-2022
@@ -1208,3 +1232,57 @@ function displayByDelayReasons(event) {
   }
 }
 //Pamela
+//Pamela
+
+function displayFlightsByDate(flightData) {
+  // Sort flights by year and then by month
+  const sortedFlights = flightData.sort((a, b) => {
+    if (a.year !== b.year) {
+      return a.year - b.year;
+    }
+    return a.month - b.month;
+  });
+
+  // Create and append HTML elements for each flight
+  displayFlightItems(sortedFlights);
+}
+
+function displayByFlightNum(flightData) {
+    const sortedFlights = flightData.sort((a, b) => {
+    if (a.arr_flights !== b.arr_flights) {
+      return a.arr_flights - b.arr_flights;
+    }
+  });
+
+  displayFlightItems(sortedFlights);
+}
+
+// helper function for showing flight list
+function displayFlightItems(sortedFlights) {
+
+    // Get the container element
+    const flightList = document.getElementById('dataDisplay');
+
+    // Clear any existing content
+    flightList.innerHTML = ' ';
+    sortedFlights.forEach(flight => {
+    const flightDiv = document.createElement('div');
+    flightDiv.className = 'flight-item';
+    flightDiv.innerHTML = `<strong>Month:</strong> ${flight.month}, <strong>Year:</strong> ${flight.year},
+    <br>
+    <strong>Carrier:</strong> ${flight.carrier}, <strong>Carrier Name:</strong> ${flight.carrier_name},
+    <br>
+    <strong>Airport:</strong> ${flight.airport}, <strong>Airport Name:</strong> ${flight.airport_name},
+    <br>
+    <strong>Arrivals Flights:</strong> ${flight.arr_flights}, <strong>Arrivals Del15:</strong> ${flight.arr_del15}, 
+    <br>
+    <strong>Carrier CT:</strong> ${flight.carrier_ct}, <strong>Weather CT:</strong> ${flight.weather_ct}, <strong>NAS CT:</strong> ${flight.nas_ct}, <strong>Security CT:</strong> ${flight.security_ct}, <strong>Late Aircraft CT:</strong> ${flight.late_aircraft_ct},
+    <br>
+    <strong>Arrivals Cancelled:</strong> ${flight.arr_cancelled}, <strong>Arrivals Diverted:</strong> ${flight.arr_diverted},
+    <br>
+    <strong>Arrivals Delay:</strong> ${flight.arr_delay}, <strong>Carrier Delay:</strong> ${flight.carrier_delay}, <strong>Weather Delay:</strong> ${flight.weather_delay}, <strong>NAS Delay:</strong> ${flight.nas_delay}, <strong>Security Delay:</strong> ${flight.security_delay}, <strong>Late Aircraft Delay:</strong> ${flight.late_aircraft_delay}
+    <br>
+    <br>`;
+    flightList.appendChild(flightDiv);
+  });
+}
