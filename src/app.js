@@ -1,60 +1,23 @@
 //Shared html elements
 const dataTitle = document.getElementById("dataTitle");
 const dataDisplay = document.getElementById("dataDisplay");
-const viewSelect = document.getElementById("viewSelect");
 
-viewSelect.addEventListener('change', detectSelect);
 
 const carrierView = document.getElementById('carrierView');
 const delayReasonsView = document.getElementById('delayReasonsView');
-delayReasonsView.style.display = 'none';
-
-//Put set your buttons and displays displayed or hidden in dataViewElements div here!
-function detectSelect(event) {
-  if (event) {
-    switch (event.target.value) {
-      case "delayNum":
-        displayByDelayNum(jsonSample);
-        break;
-      case "delayTime":
-        displayByDelayTime(jsonSample);
-        break;
-      case "carrier":
-        carrierView.style.display = 'block';
-        break;
-      case 'delayReasons':
-      delayReasonsView.style.display = 'block';  
-      break;
-      case "date":
-        displayFlightsByDate(jsonSample);
-        break;
-      case "numFlights":
-        displayByFlightNum(jsonSample);
-        break;
-      default:
-        console.log('not found');
-    }
-  }
-  if (event.target.value !== 'carrier') {
-    carrierView.style.display = 'none';
-  }
-  if (event.target.value !== 'delayReasons') {
-    delayReasonsView.style.display = 'none';
-  }
-}
 
 //seems like no avg or total delay time calculated for this dataset
-function displayByDelayTime(flightdata){  
-   
+function displayByDelayTime(flightdata) {
+
   displayFlightItems(sortedFlights);
 }
 
-function displayByDelayNum(flightdata){
-  const sortedFlights = flightdata.sort((a,b) => {
-    if (a.arr_delay !== b.arr_delay){
+function displayByDelayNum(flightdata) {
+  const sortedFlights = flightdata.sort((a, b) => {
+    if (a.arr_delay !== b.arr_delay) {
       return b.arr_delay - a.arr_delay;
     }
-  })  
+  })
   displayFlightItems(sortedFlights);
 }
 
@@ -534,12 +497,12 @@ let airportMap = new Map();
 let latestDate = [0, 0];
 let earliestDate = [9999, 32];
 
-carrierView.style.display = 'none';
-
 //Div element that holds delay airport checkboxes
 const delayAirportCheckboxes = document.getElementById('delayAirportCheckboxes');
 //Div element that holds delay carrier checkboxes
 const delayCarrierCheckboxes = document.getElementById('delayCarrierCheckboxes');
+const carrierDisplay = document.getElementById('carrierDisplay');
+const delayReasonsDisplay = document.getElementById('delayReasonsDisplay');
 
 
 //Iterate over JSON to gather max, min, and other display info
@@ -597,11 +560,11 @@ for (let i = 0; i < jsonSample.length; i++) {
     delayAirportCheckboxes.appendChild(nextLine);
   }
   //Iterate to find max and min range of months
-  if (jsonSample[i].year < earliestDate[0] ||  (jsonSample[i].year == earliestDate[0] && jsonSample[i].month > earliestDate[1])) {
+  if (jsonSample[i].year < earliestDate[0] || (jsonSample[i].year == earliestDate[0] && jsonSample[i].month > earliestDate[1])) {
     earliestDate[0] = jsonSample[i].year;
     earliestDate[1] = jsonSample[i].month;
   }
-  if (jsonSample[i].year >= latestDate[0] ||  (jsonSample[i].year == earliestDate[0] && jsonSample[i].month > earliestDate[1])) {
+  if (jsonSample[i].year >= latestDate[0] || (jsonSample[i].year == earliestDate[0] && jsonSample[i].month > earliestDate[1])) {
     latestDate[0] = jsonSample[i].year;
     latestDate[1] = jsonSample[i].month;
   }
@@ -633,9 +596,18 @@ carrierSubmit.onclick = displayByCarrier;
 
 //Called when submit is clicked and displays the data by carrier
 function displayByCarrier(event) {
-  dataTitle.innerText = 'Carrier Data';
+
+  let newTable = document.createElement('table');
 
   let rowInfo = [];
+
+
+  //Gather lowest and highest value of each category to use to change value css
+  let lowest = new Array(9);
+  lowest.fill(Number.MAX_VALUE);
+  let highest = new Array(9);
+  highest.fill(-1);
+
   //Summarize relevant data by each carrier
   carrierMap.forEach((value, key) => {
     const carrierBox = document.getElementById(key + '_CarrierCheckbox');
@@ -719,6 +691,19 @@ function displayByCarrier(event) {
       </tr>`, value, flights, delays, delayTime,
         late, lateDelay, cancel, diverted,
       carrierIssue.toFixed(2), carrierIssueTime]);
+
+      let row = [flights, delays, delayTime, late, lateDelay, cancel, diverted, carrierIssue, carrierIssueTime];
+
+      //Update highest and lowest information of all columns
+      for (let i = 0; i < row.length; i++) {
+
+        if (row[i] < lowest[i]) {
+          lowest[i] = row[i];
+        }
+        if (row[i] > highest[i]) {
+          highest[i] = row[i];
+        }
+      }
     }
   });
 
@@ -764,7 +749,7 @@ function displayByCarrier(event) {
     }
 
     //Display data in the shared data display div
-    dataDisplay.innerHTML = `<table>
+    carrierDisplay.innerHTML = `<table>
   <tr>
   <th>Carrier</th>
   <th>Flights</th>
@@ -778,6 +763,42 @@ function displayByCarrier(event) {
   <th>Delay Time by Carrier</th>
   </tr>
   ` + htmlString + `</table>`;
+
+    let table = carrierDisplay.childNodes[0];
+
+    let third = [];
+    let twoThird = [];
+
+    for (let i = 0; i < highest.length && i < lowest.length; i++) {
+      let difference = highest[i] - lowest[i];
+      third.push(lowest[i] + difference / 3);
+      twoThird.push(highest[i] - difference / 3);
+    }
+    for (let i = 1; i < table.rows.length; i++) {
+      //Skip over carrier name and change value color to each column's range
+      for (let j = 1; j < table.rows[i].cells.length && j - 1 < third.length; j++) {
+        const cell = table.rows[i].cells[j];
+        if (Number(cell.innerText) <= third[j - 1]) {
+          if (j == 1) {
+            cell.className = 'negative';
+          }
+          else {
+            cell.className = 'positive';
+          }
+        }
+        else if (Number(cell.innerText) <= twoThird[j - 1]) {
+          cell.className = 'middle';
+        }
+        else {
+          if (j == 1) {
+            cell.className = 'positive';
+          }
+          else {
+            cell.className = 'negative';
+          }
+        }
+      }
+    }
   }
 
 
@@ -816,7 +837,6 @@ function sortHelper(array, index, ascendNum, stringBool) {
       return b[index] - a[index];
     });
   }
-  console.log(array);
   return array;
 }
 
@@ -908,7 +928,7 @@ delayReasonsSumbit.addEventListener('click', displayByDelayReasons);
 
 //Display delay reasons data. Called when submit button is clicked.
 function displayByDelayReasons(event) {
-  
+
 
   let rowInfo = [];
   let newArray;
@@ -923,14 +943,10 @@ function displayByDelayReasons(event) {
     max = [Number(max[0]), Number(max[1])];
     let min = delayBeginMonth.value.split('-');
     min = [Number(min[0]), Number(min[1])];
-    console.log(max);
-    console.log(min);
     newArray = jsonSample.filter((row) => {
       return (row.year > min[0] || (row.year == min[0] && row.month >= min[1])) && (row.year < max[0] || (row.year == max[0] && row.month <= max[1]));
     });
   }
-  //Set header to reflect the data being shown
-  dataTitle.innerText = 'Delay Reasons Data';
 
   let carrierDelay;
   let carrierTime;
@@ -942,6 +958,12 @@ function displayByDelayReasons(event) {
   let securityTime;
   let lateDelay;
   let lateTime;
+
+  //Gather lowest and highest value of each category to use to change value css
+  let lowest = new Array(10);
+  lowest.fill(Number.MAX_VALUE);
+  let highest = new Array(10);
+  highest.fill(-1);
 
   //For allDelays summarize all delay reasons data
   if (delayReasonsSelect.value === 'allDelays') {
@@ -1084,6 +1106,18 @@ function displayByDelayReasons(event) {
           weatherTime, trafficDelay.toFixed(2), trafficTime,
           securityDelay, securityTime, lateDelay, lateTime
         ]);
+      let row = [carrierDelay, carrierTime, weatherDelay, weatherTime, trafficDelay, trafficTime, securityDelay, securityTime, lateDelay, lateTime];
+
+        //Update highest and lowest information of all columns
+        for (let i = 0; i < row.length; i++) {
+
+          if (row[i] < lowest[i]) {
+            lowest[i] = row[i];
+          }
+          if (row[i] > highest[i]) {
+            highest[i] = row[i];
+          }
+        }
       }
     });
   }
@@ -1117,7 +1151,7 @@ function displayByDelayReasons(event) {
         }, 0);
 
         trafficDelay = newArray.reduce((total, row) => {
-         if (row.carrier === key)
+          if (row.carrier === key)
             return total + row.nas_ct;
           return total;
         }, 0);
@@ -1169,6 +1203,19 @@ function displayByDelayReasons(event) {
           weatherTime, trafficDelay.toFixed(2), trafficTime,
           securityDelay, securityTime, lateDelay, lateTime
         ]);
+
+        let row = [carrierDelay, carrierTime, weatherDelay, weatherTime, trafficDelay, trafficTime, securityDelay, securityTime, lateDelay, lateTime];
+
+        //Update highest and lowest information of all columns
+        for (let i = 0; i < row.length; i++) {
+
+          if (row[i] < lowest[i]) {
+            lowest[i] = row[i];
+          }
+          if (row[i] > highest[i]) {
+            highest[i] = row[i];
+          }
+        }
       }
     });
   }
@@ -1181,7 +1228,7 @@ function displayByDelayReasons(event) {
 
   //Include html string with their correct header table row
   if (delayReasonsSelect.value === 'allDelays') {
-    dataDisplay.innerHTML = `<table>
+    delayReasonsDisplay.innerHTML = `<table>
   <tr>
   <th>Carrier Delay</th>
   <th>Carrier Delay Time</th>
@@ -1197,7 +1244,7 @@ function displayByDelayReasons(event) {
   ` + htmlString + `</table>`;
   }
   else if (delayReasonsSelect.value === 'airportDelays') {
-    dataDisplay.innerHTML = `<table>
+    delayReasonsDisplay.innerHTML = `<table>
   <tr>
   <th>Airport</th>
   <th>Carrier Delay</th>
@@ -1214,7 +1261,7 @@ function displayByDelayReasons(event) {
   ` + htmlString + `</table>`;
   }
   if (delayReasonsSelect.value === 'carrierDelays') {
-    dataDisplay.innerHTML = `<table>
+    delayReasonsDisplay.innerHTML = `<table>
   <tr>
   <th>Carrier</th>
   <th>Carrier Delay</th>
@@ -1229,6 +1276,34 @@ function displayByDelayReasons(event) {
   <th>Late Arrival Delay Time</th>
   </tr>
   ` + htmlString + `</table>`;
+  }
+
+  if (delayReasonsSelect.value != 'allDelays') {
+    let table = delayReasonsDisplay.childNodes[0];
+
+    let third = [];
+    let twoThird = [];
+
+    for (let i = 0; i < highest.length && i < lowest.length; i++) {
+      let difference = highest[i] - lowest[i];
+      third.push(lowest[i] + difference / 3);
+      twoThird.push(highest[i] - difference / 3);
+    }
+    for (let i = 1; i < table.rows.length; i++) {
+      //Skip over carrier name and change value color to each column's range
+      for (let j = 1; j < table.rows[i].cells.length && j - 1 < third.length; j++) {
+        const cell = table.rows[i].cells[j];
+        if (Number(cell.innerText) <= third[j - 1]) {
+            cell.className = 'positive';
+        }
+        else if (Number(cell.innerText) <= twoThird[j - 1]) {
+          cell.className = 'middle';
+        }
+        else {
+            cell.className = 'negative';
+        }
+      }
+    }
   }
 }
 //Pamela
@@ -1248,7 +1323,7 @@ function displayFlightsByDate(flightData) {
 }
 
 function displayByFlightNum(flightData) {
-    const sortedFlights = flightData.sort((a, b) => {
+  const sortedFlights = flightData.sort((a, b) => {
     if (a.arr_flights !== b.arr_flights) {
       return a.arr_flights - b.arr_flights;
     }
@@ -1260,12 +1335,12 @@ function displayByFlightNum(flightData) {
 // helper function for showing flight list
 function displayFlightItems(sortedFlights) {
 
-    // Get the container element
-    const flightList = document.getElementById('dataDisplay');
+  // Get the container element
+  const flightList = document.getElementById('dataDisplay');
 
-    // Clear any existing content
-    flightList.innerHTML = ' ';
-    sortedFlights.forEach(flight => {
+  // Clear any existing content
+  flightList.innerHTML = ' ';
+  sortedFlights.forEach(flight => {
     const flightDiv = document.createElement('div');
     flightDiv.className = 'flight-item';
     flightDiv.innerHTML = `<strong>Month:</strong> ${flight.month}, <strong>Year:</strong> ${flight.year},
