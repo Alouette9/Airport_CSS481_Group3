@@ -7,8 +7,18 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <h1>Airport Flight Data</h1>
-    <p>By Jasper, Larry, Pamela</p>
+    <ul class="nav">
+        <li><a href='./about.html'>About</a></li>
+        <li><a href="./index.html">Find Data</a></li>
+    </ul>
+
+    <div class="bannerHeader">
+        <div class="row">
+            <h1>Airport Flight Data</h1>
+            <div class="bannerContainer">
+            </div>
+        </div>
+    </div>
    
     <h2>Choose Your Data View</h2>
     <!--Select element changes what content is inside dataViewElements div for each view. 
@@ -30,12 +40,18 @@
         <div id="numFlightView">
             
         </div>
-        <div id="carrierView">
+        
+    </div>
+
+    
+    <div id="carrierView" class="box">
+        <h2>Data by Carrier</h2>
             <div id="carrierCheckboxes">
                 <input type="checkbox" checked="true" id="carrierSelectAll" name="carrierSelectAll"></input>
                 <label for="carrierSelectAll">Select All</label> <br>
             </div>
             <label for="carrierOrderBy">Order By:</label>
+            <div class="toolRow">
             <select name="carrierOrderBy" id="carrierOrderBy">
                 <option value="carrierName" selected>Carrier Name</option>
                 <option value="carrierFlights">Flights</option>
@@ -48,15 +64,19 @@
                 <option value="carrierByDelay">Delays by Carrier</option>
                 <option value="carrierByDelayTime">Delay Time by Carrier</option>
             </select>
+            
             <select name="carrierAscension" id="carrierAscension">
                 <option value="0" selected>Ascending</option>
                 <option value="1">Descending</option>
             </select>
-
             <button id="carrierSubmit">Submit</button>
+            </div>
+            <div id="carrierDisplay"></div>
         </div>
-        <div id="delayReasonsView">
-            
+
+   
+    <div id="delayReasonsView" class="box">
+            <h2>Data by Delay Reasons</h2>
             <label for="carrierOrderBy">Order By:</label>
             <select name="delayReasonsSelect" id="delayReasonsSelect">
                 <option value="allDelays" selected>All Data</option>
@@ -75,14 +95,16 @@
                 <input type="checkbox" checked="true" id="delayCarrierSelectAll" name="delayCarrierSelectAll"></input>
                 <label for="delayCarrierSelectAll">Select All</label> <br>
             </div>
-            <br>
+            <div class="toolRow">
             <label for="delayBeginMonth">Time Range: </label>
             <input type="month" name="delayBeginMonth" id="delayBeginMonth">
             to
             <input type="month" name="delayEndMonth" id="delayEndMonth">
             <button id="delayReasonsSubmit">Submit</button>
+            <div id="delayReasonsDisplay"></div>
         </div>
     </div>
+    
 
     <!--Change according to what your view is-->
     <h2 id="dataTitle"></h2>
