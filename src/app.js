@@ -2,23 +2,77 @@
 const dataTitle = document.getElementById("dataTitle");
 const dataDisplay = document.getElementById("dataDisplay");
 
+//helper functions
+function totalDelayMinutes(f) {
+  return (f.carrier_delay || 0)
+       + (f.weather_delay || 0)
+       + (f.nas_delay || 0)
+       + (f.security_delay || 0)
+       + (f.late_aircraft_delay || 0);
+}
 
 const carrierView = document.getElementById('carrierView');
 const delayReasonsView = document.getElementById('delayReasonsView');
 
 //seems like no avg or total delay time calculated for this dataset
 function displayByDelayTime(flightdata) {
+  function displayByDelayTime(flightdata) {
+  dataTitle.textContent = "Larry View: By Delay Time (minutes)";
+  const sortedFlights = [...flightdata].sort((a, b) => totalDelayMinutes(b) - totalDelayMinutes(a));
+
+  const container = document.getElementById("rawTable");
+  container.innerHTML = "";
+  sortedFlights.forEach(f => {
+    const m = totalDelayMinutes(f);
+    const card = document.createElement("div");
+    card.className = "dataCard";
+    card.innerHTML = `
+      <strong>${f.carrier_name || f.carrier}</strong> @ ${f.airport}
+      <br>Date: ${String(f.year)}-${String(f.month).padStart(2, "0")}
+      <br>Total Delay Time: <strong>${m}</strong> min
+      <br>(Carrier: ${f.carrier_delay||0}, Weather: ${f.weather_delay||0}, NAS: ${f.nas_delay||0}, Sec: ${f.security_delay||0}, Late AC: ${f.late_aircraft_delay||0})`;
+
+    if (m >= 600) { card.style.background = "#ffe5e5"; card.style.borderLeft = "8px solid #c00"; }
+    else if (m >= 300) { card.style.background = "#fff3cd"; card.style.borderLeft = "8px solid #c90"; }
+    else { card.style.background = "#e7f5e9"; card.style.borderLeft = "8px solid #2d7"; }
+    card.style.transform = `scale(${1 + Math.min(m, 600)/3000})`;
+
+    container.appendChild(card);
+  });
+
+    
+  const totalMins = sortedFlights.reduce((sum, f) => sum + totalDelayMinutes(f), 0);
+  const avg = Math.round(totalMins / Math.max(sortedFlights.length, 1));
+  document.getElementById("overviewSummary").innerHTML =
+    `<h3>Summary</h3>Total flights: ${sortedFlights.length} • Total delay: ${totalMins} min • Avg delay: ${avg} min/flight`;
+}
 
   displayFlightItems(sortedFlights);
 }
 
 function displayByDelayNum(flightdata) {
-  const sortedFlights = flightdata.sort((a, b) => {
-    if (a.arr_delay !== b.arr_delay) {
-      return b.arr_delay - a.arr_delay;
-    }
-  })
-  displayFlightItems(sortedFlights);
+  dataTitle.textContent = "Larry View: By Number of Delays (arr_delay)";
+  const sortedFlights = [...flightdata].sort((a, b) => (b.arr_delay || 0) - (a.arr_delay || 0));
+
+  const container = document.getElementById("rawTable");
+  container.innerHTML = "";
+  sortedFlights.forEach(f => {
+    const d = f.arr_delay || 0;
+    const el = document.createElement("div");
+    el.className = "dataCard";
+    el.innerHTML = `
+      <strong>${f.carrier_name || f.carrier}</strong> @ ${f.airport}
+      <br>Date: ${String(f.year)}-${String(f.month).padStart(2,"0")}
+      <br>Arrivals Delay Count: <strong>${d}</strong>
+    `;
+    el.style.color = d >= 100 ? "#b00020" : d >= 50 ? "#8a6d00" : "#155724";
+    container.appendChild(el);
+  });
+
+  const total = sortedFlights.reduce((sum, f) => sum + (f.arr_delay || 0), 0);
+  const avg = Math.round(total / Math.max(sortedFlights.length, 1));
+  document.getElementById("overviewSummary").innerHTML =
+    `<h3>Summary</h3>Total flights: ${sortedFlights.length} • Total #delays: ${total} • Avg: ${avg} per flight`;
 }
 
 //Contains 20 samples. See categories in more detail at https://www.kaggle.com/datasets/jawadkhattak/us-flight-delay-from-january-2017-july-2022
@@ -1361,3 +1415,55 @@ function displayFlightItems(sortedFlights) {
     flightList.appendChild(flightDiv);
   });
 }
+
+
+//button wiring
+  const viewSelectEl = document.getElementById("viewSelect");
+  viewSelectEl.addEventListener("change", () => {
+  const v = viewSelectEl.value;
+  // Use your dataset variable name; if it's jsonSample, keep as-is:
+  if (v === "delayTime") return displayByDelayTime(jsonSample);
+  if (v === "delayNum") return displayByDelayNum(jsonSample);
+  // keep other view handlers here (carrier, date, etc.) if you have them
+});
+
+// Utility: approximate "last 30 days" based on year/month fields
+function isInLast30Days(f) {
+  const now = new Date();
+  const flightDate = new Date(f.year, (f.month || 1) - 1, 1);
+  const diff = (now - flightDate) / (1000*60*60*24);
+  return diff <= 30;
+}
+
+document.getElementById("btnShowAll").addEventListener("click", () => {
+  displayByDelayNum(jsonSample);
+});
+
+document.getElementById("btnTop5DelayTime").addEventListener("click", () => {
+  const top = [...jsonSample]
+    .sort((a,b)=> totalDelayMinutes(b)-totalDelayMinutes(a))
+    .slice(0,5);
+  displayByDelayTime(top);
+});
+
+document.getElementById("btnTop5DelayNum").addEventListener("click", () => {
+  const top = [...jsonSample]
+    .sort((a,b)=> (b.arr_delay||0)-(a.arr_delay||0))
+    .slice(0,5);
+  displayByDelayNum(top);
+});
+
+document.getElementById("btnLast30Days").addEventListener("click", () => {
+  const recent = jsonSample.filter(isInLast30Days);
+  displayByDelayTime(recent);
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  dataTitle.textContent = "";
+  ["overviewSummary","byCarrier","byAirport","byDate","rawTable"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = "";
+  });
+});
+
+
