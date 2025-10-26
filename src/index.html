@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Airport Flight Data</title>
-  <link rel="stylesheet" href="style.css"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Airport Flight Data</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
     <ul class="nav">
         <li><a href='./about.html'>About</a></li>
@@ -19,7 +21,7 @@
             </div>
         </div>
     </div>
-   
+
     <h2>Choose Your Data View</h2>
     <!--Select element changes what content is inside dataViewElements div for each view. 
     Add each view as an option to select-->
@@ -32,26 +34,26 @@
         <option value="delayReasons">Delay Reasons</option>
         <option value="date">Date</option>
         <option value="numFlights">Number of flights</option>
-    </select> 
+    </select>
 
     <!--Put Buttons, Drop Downs, Inputs, etc. for your views here-->
     <div id="dataViewElements" class="filterElements">
         <!--Put divs of your section that are change CSS display to none when not selected selected and block when selected-->
         <div id="numFlightView">
-            
+
         </div>
-        
+
     </div>
 
-    
+
     <div id="carrierView" class="box">
         <h2>Data by Carrier</h2>
-            <div id="carrierCheckboxes">
-                <input type="checkbox" checked="true" id="carrierSelectAll" name="carrierSelectAll"></input>
-                <label for="carrierSelectAll">Select All</label> <br>
-            </div>
-            <label for="carrierOrderBy">Order By:</label>
-            <div class="toolRow">
+        <div id="carrierCheckboxes">
+            <input type="checkbox" checked="true" id="carrierSelectAll" name="carrierSelectAll"></input>
+            <label for="carrierSelectAll">Select All</label> <br>
+        </div>
+        <label for="carrierOrderBy">Order By:</label>
+        <div class="toolRow">
             <select name="carrierOrderBy" id="carrierOrderBy">
                 <option value="carrierName" selected>Carrier Name</option>
                 <option value="carrierFlights">Flights</option>
@@ -64,51 +66,64 @@
                 <option value="carrierByDelay">Delays by Carrier</option>
                 <option value="carrierByDelayTime">Delay Time by Carrier</option>
             </select>
-            
+
             <select name="carrierAscension" id="carrierAscension">
                 <option value="0" selected>Ascending</option>
                 <option value="1">Descending</option>
             </select>
             <button id="carrierSubmit">Submit</button>
-            </div>
-            <div id="carrierDisplay"></div>
+        </div>
+        <div id="carrierDisplay"></div>
+    </div>
+
+
+    <div id="delayReasonsView" class="box">
+        <h2>Data by Delay Reasons</h2>
+        <label for="carrierOrderBy">Order By:</label>
+        <select name="delayReasonsSelect" id="delayReasonsSelect">
+            <option value="allDelays" selected>All Data</option>
+            <option value="airportDelays">Airport</option>
+            <option value="carrierDelays">Carrier</option>
+        </select>
+
+        <div id="delayAirportCheckboxes">
+            <h3>Airports</h3>
+            <input type="checkbox" checked="true" id="delayAirportSelectAll" name="delayAirportSelectAll"></input>
+            <label for="delayAirportSelectAll">Select All</label> <br>
         </div>
 
-   
-    <div id="delayReasonsView" class="box">
-            <h2>Data by Delay Reasons</h2>
-            <label for="carrierOrderBy">Order By:</label>
-            <select name="delayReasonsSelect" id="delayReasonsSelect">
-                <option value="allDelays" selected>All Data</option>
-                <option value="airportDelays">Airport</option>
-                <option value="carrierDelays">Carrier</option>
-            </select>
-
-            <div id="delayAirportCheckboxes">
-                <h3>Airports</h3>
-                <input type="checkbox" checked="true" id="delayAirportSelectAll" name="delayAirportSelectAll"></input>
-                <label for="delayAirportSelectAll">Select All</label> <br>
-            </div>
-            
-            <div id="delayCarrierCheckboxes">
-                <h3>Carriers</h3>
-                <input type="checkbox" checked="true" id="delayCarrierSelectAll" name="delayCarrierSelectAll"></input>
-                <label for="delayCarrierSelectAll">Select All</label> <br>
-            </div>
-            <div class="toolRow">
+        <div id="delayCarrierCheckboxes">
+            <h3>Carriers</h3>
+            <input type="checkbox" checked="true" id="delayCarrierSelectAll" name="delayCarrierSelectAll"></input>
+            <label for="delayCarrierSelectAll">Select All</label> <br>
+        </div>
+        <div class="toolRow">
             <label for="delayBeginMonth">Time Range: </label>
             <input type="month" name="delayBeginMonth" id="delayBeginMonth">
             to
             <input type="month" name="delayEndMonth" id="delayEndMonth">
             <button id="delayReasonsSubmit">Submit</button>
-            <div id="delayReasonsDisplay"></div>
         </div>
+        <div id="delayReasonsDisplay"></div>
     </div>
-    
+
 
     <!--Change according to what your view is-->
     <h2 id="dataTitle"></h2>
+    <div id="controls" class="toolRow">
+        <button id="btnShowAll">Show All</button>
+        <button id="btnTop5DelayTime">Top 5: Delay Time</button>
+        <button id="btnTop5DelayNum">Top 5: # Delays</button>
+        <button id="btnLast30Days">Last 30 Days</button>
+        <button id="btnReset">Reset</button>
+    </div>
 
+    <!-- 5 SECTIONS to render different views -->
+    <div id="overviewSummary" class="box"></div>
+    <div id="byCarrier" class="box"></div>
+    <div id="byAirport" class="box"></div>
+    <div id="byDate" class="box"></div>
+    <div id="rawTable" class="box"></div>
     <!--Replace child elemnts of the div with the elements required of your view after a submit-->
     <!--A table, ordered list, unordered list, etc. Depends on implementation-->
     <div id="dataDisplay">
@@ -116,4 +131,5 @@
     </div>
 </body>
 <script src="app.js"></script>
+
 </html>

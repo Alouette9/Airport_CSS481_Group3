@@ -46,15 +46,23 @@ h1 {
 .nav li a:hover, .nav li a.active { background: #1565c0; }
 
 .positive {
-    color:green
+    color:rgb(0, 255, 0)
+}
+
+.leanPositive {
+    color:rgb(155, 205, 81);
 }
 
 .negative {
     color:red;
 }
 
+.leanNegative {
+    color:rgb(185, 66, 66);
+}
+
 .middle {
-    color: black;
+    color: rgb(70, 70, 70);
 }
 
 table, th, td{
