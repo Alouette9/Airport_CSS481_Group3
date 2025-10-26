@@ -1421,10 +1421,10 @@ function displayFlightItems(sortedFlights) {
   const viewSelectEl = document.getElementById("viewSelect");
   viewSelectEl.addEventListener("change", () => {
   const v = viewSelectEl.value;
-  // Use your dataset variable name; if it's jsonSample, keep as-is:
+
   if (v === "delayTime") return displayByDelayTime(jsonSample);
   if (v === "delayNum") return displayByDelayNum(jsonSample);
-  // keep other view handlers here (carrier, date, etc.) if you have them
+
 });
 
 // Utility: approximate "last 30 days" based on year/month fields
