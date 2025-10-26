@@ -108,7 +108,20 @@
 
     <!--Change according to what your view is-->
     <h2 id="dataTitle"></h2>
-
+      <div id="controls" class="toolRow">
+      <button id="btnShowAll">Show All</button>
+      <button id="btnTop5DelayTime">Top 5: Delay Time</button>
+      <button id="btnTop5DelayNum">Top 5: # Delays</button>
+      <button id="btnLast30Days">Last 30 Days</button>
+      <button id="btnReset">Reset</button>
+      </div>
+      
+      <!-- 5 SECTIONS to render different views -->
+      <div id="overviewSummary" class="box"></div>
+      <div id="byCarrier" class="box"></div>
+      <div id="byAirport" class="box"></div>
+      <div id="byDate" class="box"></div>
+      <div id="rawTable" class="box"></div>
     <!--Replace child elemnts of the div with the elements required of your view after a submit-->
     <!--A table, ordered list, unordered list, etc. Depends on implementation-->
     <div id="dataDisplay">
