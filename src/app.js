@@ -17,7 +17,7 @@ const delayReasonsView = document.getElementById('delayReasonsView');
 //seems like no avg or total delay time calculated for this dataset
 function displayByDelayTime(flightdata) {
   function displayByDelayTime(flightdata) {
-  dataTitle.textContent = "Larry View: By Delay Time (minutes)";
+  dataTitle.textContent = "By Delay Time (minutes)";
   const sortedFlights = [...flightdata].sort((a, b) => totalDelayMinutes(b) - totalDelayMinutes(a));
 
   const container = document.getElementById("rawTable");
@@ -51,7 +51,7 @@ function displayByDelayTime(flightdata) {
 }
 
 function displayByDelayNum(flightdata) {
-  dataTitle.textContent = "Larry View: By Number of Delays (arr_delay)";
+  dataTitle.textContent = "By Number of Delays (arr_delay)";
   const sortedFlights = [...flightdata].sort((a, b) => (b.arr_delay || 0) - (a.arr_delay || 0));
 
   const container = document.getElementById("rawTable");
