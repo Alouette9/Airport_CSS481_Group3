@@ -16,7 +16,6 @@ const delayReasonsView = document.getElementById('delayReasonsView');
 
 
 function displayByDelayTime(flightdata) {
-  function displayByDelayTime(flightdata) {
   dataTitle.textContent = "Data By Delay Time (minutes)";
   const sortedFlights = [...flightdata].sort((a, b) => totalDelayMinutes(b) - totalDelayMinutes(a));
 
