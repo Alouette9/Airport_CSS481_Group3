@@ -167,13 +167,33 @@
         <div id="delayTimeDisplay"></div>
     </div>
 
-
-
-    <!--Change according to what your view is-->
-    <h2 id="dataTitle"></h2>
-    <!--Replace child elemnts of the div with the elements required of your view after a submit-->
-    <!--A table, ordered list, unordered list, etc. Depends on implementation-->
-    <div id="dataDisplay">
+    <div id="dateView" class="box">
+        <h2>Flight Data by Date</h2>
+        <div class="toolRow">
+            <label for="dateBeginMonth">Time Range: </label>
+            <input type="month" name="dateBeginMonth" id="dateBeginMonth">
+            to
+            <input type="month" name="dateEndMonth" id="dateEndMonth">
+            <button id="dateSubmit">Submit</button>
+        </div>
+        <div id="dateDisplay">
+        </div>
+    </div>
+    
+    <div id="flightNumView" class="box">
+        <h2>Data by Number of Flights</h2>
+        
+        <div class="toolRow">
+            <label for="flightNumBegin">Range of Number of Flights: </label>
+            <input type="number" name="flightNumBegin" id="flightNumBegin" min="0" step="10" value="0">
+            to
+            <input type="number" name="flightNumEnd" id="flightNumEnd" min="0" step="10" value="10000">
+            <button id="flightNumSubmit">Submit</button>
+        </div>
+        <div id="flightNumDisplay">
+        </div>
+    </div>
+    
 
     </div>
 </body>

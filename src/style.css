@@ -46,19 +46,25 @@ h1 {
 .nav li a:hover, .nav li a.active { background: #1565c0; }
 
 .positive {
-    color:rgb(0, 255, 0)
+    color:rgb(0, 255, 0);
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .leanPositive {
     color:rgb(155, 205, 81);
+    font-weight: bold;
 }
 
 .negative {
     color:red;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .leanNegative {
     color:rgb(185, 66, 66);
+    font-weight: bold;
 }
 
 .middle {
