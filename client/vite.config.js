@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Airport_CSS481_Group3/' 
+  base: '/' 
 })

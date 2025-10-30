@@ -1,42 +1,122 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+html, body, #root {
+  margin: 0;
+    padding: 0;
+      height: 100%;
+      width: 100%;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items:baseline;
+    margin-top: 5px;;
+    gap: 5px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.bannerContainer {
+    position: absolute;
+    z-index: -100;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.bannerHeader {
+    display:flex;
+    position: relative;
+    background-image: url('../assets/sky.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
 }
 
-.card {
-  padding: 2em;
+h1 {
+    font-size:60px;
 }
 
-.read-the-docs {
-  color: #888;
+.nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #122643;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.nav li { float: left; }
+.nav li a {
+  display: block;
+  padding: 12px 16px;
+  color: #fff;
+  text-decoration: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.413);
+}
+
+.nav li:last-child a { border-right: 1px solid rgba(255, 255, 255, 0.413); }
+
+.nav li a:hover, .nav li a.active { background: #1565c0; }
+
+.positive {
+    color:rgb(0, 255, 0);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.leanPositive {
+    color:rgb(155, 205, 81);
+    font-weight: bold;
+}
+
+.negative {
+    color:red;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.leanNegative {
+    color:rgb(185, 66, 66);
+    font-weight: bold;
+}
+
+.middle {
+    color: rgb(70, 70, 70);
+}
+
+table, th, td{
+    border: 1px solid, rgb(140, 140, 219);
+    border-collapse: collapse;
+}
+
+tr:nth-child(even) {background-color:rgb(232, 242, 253)}
+
+th {
+    background-color: #122643;
+    color:white;
+}
+
+.box {
+    display: flex;;
+    flex-direction: column;
+    gap: 5px;
+}
+
+select {
+    width: fit-content;
+}
+
+button {
+    width: fit-content;
+}
+
+input {
+    width: fit-content;
+}
+
+.toolRow {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    margin-top: 5px;;
+    gap: 5px;
+}
+
+h2 {
+    border-bottom: blue solid 4px;
 }
