@@ -1,8 +1,4 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './index.css'
-import {Routes, BrowserRouter as Router, Route, Link} from 'react-router-dom';
-import App from './App';
 
 export function About() {
     return (

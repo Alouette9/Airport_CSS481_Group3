@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function AirportHome() {
+export function AirportHome({jsonSample}) {
     //Add states or refs here that may have to be props that are shared between components
     
 
@@ -11,6 +11,6 @@ export function AirportHome() {
     
     //Insert your components here!
     return(<>
-        <h1>Delete Me!</h1>
+        
     </>);
 }
