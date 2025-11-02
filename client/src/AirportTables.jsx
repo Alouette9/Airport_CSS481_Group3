@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import './App.css';
 
 export function AirportTables({jsonSample}) {
 
@@ -94,7 +95,7 @@ export function AirportTables({jsonSample}) {
             for (let i = 0; i < rows.length; i++) html += rows[i][0];
 
             const host = document.getElementById('delayNumDisplay');
-            host.innerHTML = `<table>
+            host.innerHTML = `<table className='dataTable'>
     <tr>
       <th>Carrier</th>
       <th>Delay Flights</th>
@@ -146,7 +147,7 @@ export function AirportTables({jsonSample}) {
             for (let i = 0; i < rows.length; i++) html += rows[i][0];
 
             const host = document.getElementById('delayTimeDisplay');
-            host.innerHTML = `<table>
+            host.innerHTML = `<table className='dataTable'>
     <tr>
       <th>Carrier</th>
       <th>Total Delay Minutes</th>
@@ -289,7 +290,6 @@ export function AirportTables({jsonSample}) {
         }
 
 
-        //Jasper
         //Stores what carriers have been found to display by
         let carrierMap = new Map();
         //Div element that holds carrier checkboxes
@@ -374,7 +374,9 @@ export function AirportTables({jsonSample}) {
                 latestDate[1] = jsonSample.current[i].month;
             }
 
-        } initDelayViews();
+        }
+
+        initDelayViews();
 
 
         //Select all checkbox for carrier view
@@ -555,7 +557,7 @@ export function AirportTables({jsonSample}) {
                 }
 
                 //Display data in the shared data display div
-                carrierDisplay.innerHTML = `<table>
+                carrierDisplay.innerHTML = `<table className='dataTable'>
   <tr>
   <th>Carrier</th>
   <th>Flights</th>
@@ -626,8 +628,6 @@ export function AirportTables({jsonSample}) {
                     }
                 }
             }
-
-
         }
 
         //Helper function that sorts the array by the column specified and in
@@ -1073,7 +1073,7 @@ export function AirportTables({jsonSample}) {
 
             //Include html string with their correct header table row
             if (delayReasonsSelect.value === 'allDelays') {
-                delayReasonsDisplay.innerHTML = `<table>
+                delayReasonsDisplay.innerHTML = `<table className='dataTable'>
   <tr>
   <th>Carrier Delay</th>
   <th>Carrier Delay Time</th>
@@ -1089,7 +1089,7 @@ export function AirportTables({jsonSample}) {
   ` + htmlString + `</table>`;
             }
             else if (delayReasonsSelect.value === 'airportDelays') {
-                delayReasonsDisplay.innerHTML = `<table>
+                delayReasonsDisplay.innerHTML = `<table className='dataTable'>
   <tr>
   <th>Airport</th>
   <th>Carrier Delay</th>
@@ -1106,7 +1106,7 @@ export function AirportTables({jsonSample}) {
   ` + htmlString + `</table>`;
             }
             if (delayReasonsSelect.value === 'carrierDelays') {
-                delayReasonsDisplay.innerHTML = `<table>
+                delayReasonsDisplay.innerHTML = `<table className='dataTable'>
   <tr>
   <th>Carrier</th>
   <th>Carrier Delay</th>
@@ -1291,7 +1291,7 @@ export function AirportTables({jsonSample}) {
 
             // Clear any existing content
             flightList.innerHTML = '';
-            let htmlString = `<table>
+            let htmlString = `<table className='dataTable'>
   <tr>
   <th>Month</th>
   <th>Year</th>
@@ -1384,7 +1384,6 @@ export function AirportTables({jsonSample}) {
                     }
                 }
             }
-
         }
 
         dateSubmit.addEventListener('click', displayFlightsByDate);
@@ -1396,15 +1395,15 @@ export function AirportTables({jsonSample}) {
 
     return (
         <>
-            <div class="bannerHeader">
-                <div class="row">
+            <div className="bannerHeader">
+                <div className="row">
                     <h1>Airport Flight Data</h1>
-                    <div class="bannerContainer">
+                    <div className="bannerContainer">
                     </div>
                 </div>
             </div>
 
-            <div id="dataViewElements" class="filterElements">
+            <div id="dataViewElements" className="filterElements">
                 <div id="numFlightView">
 
                 </div>
@@ -1412,14 +1411,14 @@ export function AirportTables({jsonSample}) {
             </div>
 
 
-            <div id="carrierView" class="box">
+            <div id="carrierView" className="box">
                 <h2>Data by Carrier</h2>
                 <div id="carrierCheckboxes">
                     <input type="checkbox" checked="true" id="carrierSelectAll" name="carrierSelectAll"></input>
                     <label for="carrierSelectAll">Select All</label> <br />
                 </div>
                 <label for="carrierOrderBy">Order By:</label>
-                <div class="toolRow">
+                <div className="toolRow">
                     <select name="carrierOrderBy" id="carrierOrderBy">
                         <option value="carrierName" selected>Carrier Name</option>
                         <option value="carrierFlights">Flights</option>
@@ -1443,7 +1442,7 @@ export function AirportTables({jsonSample}) {
             </div>
 
 
-            <div id="delayReasonsView" class="box">
+            <div id="delayReasonsView" className="box">
                 <h2>Data by Delay Reasons</h2>
                 <label for="carrierOrderBy">Order By:</label>
                 <select name="delayReasonsSelect" id="delayReasonsSelect">
@@ -1463,7 +1462,7 @@ export function AirportTables({jsonSample}) {
                     <input type="checkbox" checked="true" id="delayCarrierSelectAll" name="delayCarrierSelectAll"></input>
                     <label for="delayCarrierSelectAll">Select All</label> <br />
                 </div>
-                <div class="toolRow">
+                <div className="toolRow">
                     <label for="delayBeginMonth">Time Range: </label>
                     <input type="month" name="delayBeginMonth" id="delayBeginMonth" />
                     to
@@ -1473,11 +1472,11 @@ export function AirportTables({jsonSample}) {
                 <div id="delayReasonsDisplay"></div>
             </div>
 
-            <div id="delayNumSection" class="box">
+            <div id="delayNumSection" className="box">
                 <h2>Data by Number of Delays</h2>
 
                 <label><input type="checkbox" id="delayNumSelectAll" checked /> Select All</label>
-                <div class="toolRow">
+                <div className="toolRow">
                     <label>Order By:</label>
                     <select id="delayNumOrderBy">
                         <option value="carrierName">Carrier Name</option>
@@ -1502,11 +1501,11 @@ export function AirportTables({jsonSample}) {
                 <div id="delayNumDisplay"></div>
             </div>
 
-            <div id="delayTimeSection" class="box">
+            <div id="delayTimeSection" className="box">
                 <h2>Data by Time of Delays</h2>
 
                 <label><input type="checkbox" id="delayTimeSelectAll" checked /> Select All</label>
-                <div class="toolRow">
+                <div className="toolRow">
                     <label>Order By:</label>
                     <select id="delayTimeOrderBy">
                         <option value="carrierName">Carrier Name</option>
@@ -1531,9 +1530,9 @@ export function AirportTables({jsonSample}) {
                 <div id="delayTimeDisplay"></div>
             </div>
 
-            <div id="dateView" class="box">
+            <div id="dateView" className="box">
                 <h2>Flight Data by Date</h2>
-                <div class="toolRow">
+                <div className="toolRow">
                     <label for="dateBeginMonth">Time Range: </label>
                     <input type="month" name="dateBeginMonth" id="dateBeginMonth" />
                     to
@@ -1544,10 +1543,10 @@ export function AirportTables({jsonSample}) {
                 </div>
             </div>
 
-            <div id="flightNumView" class="box">
+            <div id="flightNumView" className="box">
                 <h2>Data by Number of Flights</h2>
 
-                <div class="toolRow">
+                <div className="toolRow">
                     <label for="flightNumBegin">Range of Number of Flights: </label>
                     <input type="number" name="flightNumBegin" id="flightNumBegin" min="0" step="10" value="0" />
                     to

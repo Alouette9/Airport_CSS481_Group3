@@ -3,6 +3,7 @@ import { About } from './about';
 import {Routes, BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import { AirportTables } from './AirportTables';
 import { AirportHome } from './AirportHome';
+import { useRef } from 'react';
 function App() {
 
   //Contains 20 samples. See categories in more detail at https://www.kaggle.com/datasets/jawadkhattak/us-flight-delay-from-january-2017-july-2022

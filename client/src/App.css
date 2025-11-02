@@ -13,6 +13,116 @@ html, body, #root {
     gap: 5px;
 }
 
+.flexRow {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-left: 5px;
+    gap: 30px;
+    align-items: center;
+}
+
+.expandRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5px;
+    padding-right:5px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.expandText {
+    height: 40px;
+    align-content: center;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(214, 214, 214);
+    background-color: rgb(246, 246, 246);
+
+}
+
+
+.filterBar {
+    width: fit-content;
+    padding-right: 10px;
+    padding-left: 10px;
+    background-color: rgb(234, 234, 234);
+    justify-content: center;
+    border-style:hidden;
+    border-radius: 1%;
+}
+
+.rankingList table, 
+.rankingList tr, 
+.rankingList td{
+    border:none;
+    background-color: transparent;
+    padding-left: 10px;
+}
+
+.cardContent {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2%;
+    border-color: grey;
+}
+
+.flexColumnScroll {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;;
+    gap: 5px;
+    overflow-y: auto;
+    height: 30vh;
+}
+
+.center {
+    justify-content: center;
+    justify-items: center;
+}
+
+
+.dropDown {
+    position: absolute;
+    border-width: 2px;
+    width: 40vw;
+}
+
+.dropBorder {
+    background-color: white;
+    border-color: grey;
+    border-style: solid;
+    border-radius: 2%;
+}
+
+.dropDownButton {
+    width: fit-content;
+    height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0em 0em;
+    border-radius: 0;
+}
+
+.filterButton {
+    width: fit-content;
+    height:40px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0em 0em;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 20px;
+}
+
 .bannerContainer {
     position: absolute;
     z-index: -100;
@@ -78,12 +188,13 @@ h1 {
     color: rgb(70, 70, 70);
 }
 
-table, th, td{
+.dataTable th, td{
     border: 1px solid, rgb(140, 140, 219);
-    border-collapse: collapse;
 }
 
-tr:nth-child(even) {background-color:rgb(232, 242, 253)}
+table, th, td {
+    border-collapse: collapse;
+}
 
 th {
     background-color: #122643;
@@ -119,4 +230,10 @@ input {
 
 h2 {
     border-bottom: blue solid 4px;
+}
+
+.expandTitle {
+    border-color: grey;
+    border-width: 3px;
+    width: ;
 }
