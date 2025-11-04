@@ -13,6 +13,116 @@ html, body, #root {
     gap: 5px;
 }
 
+.flexRow {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-left: 5px;
+    gap: 30px;
+    align-items: center;
+}
+
+.expandRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5px;
+    padding-right:5px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.expandText {
+    height: 40px;
+    align-content: center;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(214, 214, 214);
+    background-color: rgb(246, 246, 246);
+
+}
+
+
+.filterBar {
+    width: fit-content;
+    padding-right: 10px;
+    padding-left: 10px;
+    background-color: rgb(234, 234, 234);
+    justify-content: center;
+    border-style:hidden;
+    border-radius: 1%;
+}
+
+.rankingList table, 
+.rankingList tr, 
+.rankingList td{
+    border:none;
+    background-color: transparent;
+    padding-left: 10px;
+}
+
+.cardContent {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2%;
+    border-color: grey;
+}
+
+.flexColumnScroll {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;;
+    gap: 5px;
+    overflow-y: auto;
+    height: 30vh;
+}
+
+.center {
+    justify-content: center;
+    justify-items: center;
+}
+
+
+.dropDown {
+    position: absolute;
+    border-width: 2px;
+    width: 40vw;
+}
+
+.dropBorder {
+    background-color: white;
+    border-color: grey;
+    border-style: solid;
+    border-radius: 2%;
+}
+
+.dropDownButton {
+    width: fit-content;
+    height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0em 0em;
+    border-radius: 0;
+}
+
+.filterButton {
+    width: fit-content;
+    height:40px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0em 0em;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 20px;
+}
+
 .bannerContainer {
     position: absolute;
     z-index: -100;
@@ -78,12 +188,13 @@ h1 {
     color: rgb(70, 70, 70);
 }
 
-table, th, td{
+.dataTable th, td{
     border: 1px solid, rgb(140, 140, 219);
-    border-collapse: collapse;
 }
 
-tr:nth-child(even) {background-color:rgb(232, 242, 253)}
+table, th, td {
+    border-collapse: collapse;
+}
 
 th {
     background-color: #122643;
@@ -120,99 +231,9 @@ input {
 h2 {
     border-bottom: blue solid 4px;
 }
-/* Sticky config for the date slider */
-.sticky-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #f0f0f0;
-  padding: 10px;
-  color:rgb(70, 70, 70);
-  z-index: 1000; /* Ensures it's on top of other elements */
-}
 
-/* Dual range slider 
-ORIGINAL SOURCE: https://codepen.io/predragdavidovic/pen/mdpMoWo
-adjusted so it fits the bottom sticky div
-and so it uses dates instead of integers
-*/
-
-.range_container {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  margin: 10px auto;
-}
-
-.sliders_control {
-  position: relative;
-  min-height: 10px;
-}
-
-.form_control {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  font-size: 15px;
-  color: #635a5a;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  pointer-events: all;
-  width: 24px;
-  height: 24px;
-  background-color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px #C6C6C6;
-  cursor: pointer;
-}
-
-input[type=range]::-moz-range-thumb {
-  -webkit-appearance: none;
-  pointer-events: all;
-  width: 24px;
-  height: 24px;
-  background-color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px #C6C6C6;
-  cursor: pointer;  
-}
-
-input[type=range]::-webkit-slider-thumb:hover {
-  background: #f7f7f7;
-}
-
-input[type=range]::-webkit-slider-thumb:active {
-  box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
-  -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
-}
-
-input[type="number"] {
-  color: #8a8383;
-  width: 50px;
-  height: 30px;
-  font-size: 20px;
-  border: none;
-}
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
-   opacity: 1;
-}
-
-input[type="range"] {
-  -webkit-appearance: none; 
-  appearance: none;
-  height: 2px;
-  width: 100%;
-  position: absolute;
-  background-color: #C6C6C6;
-  pointer-events: none;
-}
-
-#fromSlider {
-  height: 0;
-  z-index: 1;
+.expandTitle {
+    border-color: grey;
+    border-width: 3px;
+    width: ;
 }
