@@ -1390,7 +1390,6 @@ export function AirportTables({jsonSample}) {
         flightNumSubmit.addEventListener('click', displayByFlightNum);
 
 
-
     }, []);
 
     return (
@@ -1556,6 +1555,7 @@ export function AirportTables({jsonSample}) {
                 <div id="flightNumDisplay">
                 </div>
             </div>
+            
         </>
     );
 }

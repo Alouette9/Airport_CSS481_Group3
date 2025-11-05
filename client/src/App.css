@@ -235,5 +235,16 @@ h2 {
 .expandTitle {
     border-color: grey;
     border-width: 3px;
-    width: ;
+}
+
+/* Sticky config for the date slider */
+.sticky-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 5px;
+  color:rgb(70, 70, 70);
+  z-index: 1000; /* Ensures it's on top of other elements */
 }

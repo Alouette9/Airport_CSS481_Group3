@@ -4,10 +4,48 @@ import { ExpandableCard } from './ExpandableCard';
 
 export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, carrierMap, airportMap }) {
 
+    // Small inline PieChart component (no external deps)
+    function PieChart({ items, size = 160, innerRadius = 40 }) {
+        const cx = size / 2;
+        const cy = size / 2;
+        const r = size / 2;
+
+        const total = items.reduce((s, it) => s + Math.max(0, it.value), 0) || 1;
+
+        let cumulative = 0;
+
+        function polarToCartesian(cx, cy, r, angleDeg) {
+            const angleRad = (angleDeg - 90) * Math.PI / 180.0;
+            return { x: cx + (r * Math.cos(angleRad)), y: cy + (r * Math.sin(angleRad)) };
+        }
+
+        function describeArc(cx, cy, r, startAngle, endAngle) {
+            const start = polarToCartesian(cx, cy, r, endAngle);
+            const end = polarToCartesian(cx, cy, r, startAngle);
+            const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+            return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
+        }
+
+        return (
+            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+                {items.map((it, idx) => {
+                    const start = (cumulative / total) * 360;
+                    cumulative += Math.max(0, it.value);
+                    const end = (cumulative / total) * 360;
+                    const path = describeArc(cx, cy, r, start, end);
+                    return <path key={idx} d={path} fill={it.color || '#888'} stroke="#fff" strokeWidth={1} />;
+                })}
+                {/* inner circle to create donut */}
+                <circle cx={cx} cy={cy} r={innerRadius} fill="#fff" />
+            </svg>
+        );
+    }
+
     const airportRankList = useRef(null);
     const carrierRankList = useRef(null);
     const [carrierRankContent, setCarrierRankContent] = useState([]);
     const [airportRankContent, setAirportRankContent] = useState([]);
+    const [summaryContent, setSummaryContent] = useState(null);
 
     useEffect(() => {
         if (newFilter) {
@@ -119,6 +157,55 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
                 }
             }
             setAirportRankContent(newAirportRanking);
+            // Compute a small summary panel (total flights, total delays, delay %)
+            try {
+                const totalFlights = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_flights) || 0), 0);
+                const totalDelays = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_del15) || 0), 0);
+                const delayPct = totalFlights ? ((totalDelays / totalFlights) * 100).toFixed(2) : '0.00';
+                const carrierSet = new Set(filteredData.current.map(r => r.carrier));
+                const airportSet = new Set(filteredData.current.map(r => r.airport));
+
+                // Build delay reasons aggregation for pie chart
+                const reasonDefs = [
+                    { key: 'carrier_delay', label: 'Carrier', color: '#4e79a7' },
+                    { key: 'weather_delay', label: 'Weather', color: '#f28e2b' },
+                    { key: 'nas_delay', label: 'NAS', color: '#e15759' },
+                    { key: 'security_delay', label: 'Security', color: '#76b7b2' },
+                    { key: 'late_aircraft_delay', label: 'Late aircraft', color: '#59a14f' }
+                ];
+
+                const reasonItems = reasonDefs.map(def => ({
+                    label: def.label,
+                    value: filteredData.current.reduce((s, r) => s + (Number(r[def.key]) || 0), 0),
+                    color: def.color
+                }));
+
+                const totalReason = reasonItems.reduce((s, it) => s + it.value, 0) || 1;
+
+                setSummaryContent(
+                    <div style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
+                        <PieChart items={reasonItems} size={160} innerRadius={44} />
+                        <div>
+                            <h4>Delay reasons</h4>
+                            <table className='summaryTable'>
+                                <tbody>
+                                    {reasonItems.map((it, idx) => (
+                                        <tr key={idx}>
+                                            <td style={{width: '14px'}}><span style={{display:'inline-block', width:12, height:12, background: it.color, marginRight:8}}></span></td>
+                                            <td>{it.label}</td>
+                                            <td style={{paddingLeft:12}}>{it.value.toLocaleString()} ({((it.value / totalReason) * 100).toFixed(1)}%)</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div style={{marginTop:8, fontSize:12}}><strong>Total delays:</strong> {totalDelays.toLocaleString()}</div>
+                        </div>
+                    </div>
+                );
+            } catch (e) {
+                console.warn('Failed to compute summary', e);
+                setSummaryContent(null);
+            }
             setNewFilter(false);
         }
     }, [newFilter]);
@@ -144,6 +231,11 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
                         
                     </table>
                     <p>*Rankings calculated by number of delays divided by total flights</p>
+                </ExpandableCard>
+            </div>
+            <div id='summaryCard' className='card'>
+                <ExpandableCard title={'Dataset Summary'} initialDisplay={true} expandMode={'static'}>
+                    {summaryContent}
                 </ExpandableCard>
             </div>
         </div>
