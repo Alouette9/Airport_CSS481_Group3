@@ -1,6 +1,6 @@
 import './App.css'
 import { About } from './About';
-import {Routes, BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import { HashRouter, Routes, BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import { AirportTables } from './AirportTables';
 import { AirportHome } from './AirportHome';
 import { useRef } from 'react';
@@ -469,7 +469,7 @@ function App() {
 
   return (
     <>
-    <Router>
+      {/*<Router>
       <ul className="nav">
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/tables'>Tables</Link></li>
@@ -480,6 +480,19 @@ function App() {
           <Route exact path="/tables" element={<AirportTables jsonSample={jsonSample}/>}/>
           <Route exact path="/about" element={<About/>}/>
         </Routes>
+    </Router>*/}
+    <Router>
+      <ul className="nav">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/tables">Tables</Link></li>
+        <li><Link to="/about">About</Link></li>
+      </ul>
+
+      <Routes>
+        <Route path="/" element={<AirportHome jsonSample={jsonSample} />} />
+        <Route path="/tables" element={<AirportTables jsonSample={jsonSample} />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
     </Router>
   </>
   )
