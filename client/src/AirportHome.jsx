@@ -1,6 +1,7 @@
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
+import { Prediction } from "./Prediction";
 
 export function AirportHome({ jsonSample }) {
     //Add states or refs here that may have to be props that are shared between components
@@ -26,7 +27,7 @@ export function AirportHome({ jsonSample }) {
                 airportMap.current.set(jsonSample.current[i].airport, jsonSample.current[i].airport_name);
             }
             //Iterate to find max and min range of months
-            if (jsonSample.current[i].year < earliestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month > earliestDate.current[1])) {
+            if (jsonSample.current[i].year < earliestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month < earliestDate.current[1])) {
                 earliestDate.current[0] = jsonSample.current[i].year;
                 earliestDate.current[1] = jsonSample.current[i].month;
             }
@@ -138,6 +139,7 @@ export function AirportHome({ jsonSample }) {
             </div>
         </div>
         <Rankings dataChanged={dataChanged} filteredData={filteredData} newFilter={newFilter} setNewFilter={setNewFilter} carrierMap={carrierMap} airportMap={airportMap} />
+        <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setNewFilter={setNewFilter} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
             <div className="sticky-bottom">
