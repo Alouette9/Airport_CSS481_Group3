@@ -483,15 +483,15 @@ function App() {
     </Router>*/}
     <Router>
       <ul className="nav">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/tables">Tables</Link></li>
-        <li><Link to="/about">About</Link></li>
+        <li><Link to="/Airport_CSS481_Group3/">Home</Link></li>
+        <li><Link to="/Airport_CSS481_Group3/tables">Tables</Link></li>
+        <li><Link to="/Airport_CSS481_Group3/about">About</Link></li>
       </ul>
 
       <Routes>
-        <Route path="/" element={<AirportHome jsonSample={jsonSample} />} />
-        <Route path="/tables" element={<AirportTables jsonSample={jsonSample} />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/Airport_CSS481_Group3/" element={<AirportHome jsonSample={jsonSample} />} />
+        <Route path="/Airport_CSS481_Group3/tables" element={<AirportTables jsonSample={jsonSample} />} />
+        <Route path="/Airport_CSS481_Group3/about" element={<About />} />
       </Routes>
     </Router>
   </>
