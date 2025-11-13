@@ -1,6 +1,7 @@
 import './App.css';
 import { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { ExpandableCard } from './ExpandableCard';
+import { PieChart} from './PieChart';
 
 export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, carrierMap, airportMap }) {
 
@@ -8,6 +9,7 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
     const carrierRankList = useRef(null);
     const [carrierRankContent, setCarrierRankContent] = useState([]);
     const [airportRankContent, setAirportRankContent] = useState([]);
+    const [summaryContent, setSummaryContent] = useState(null);
 
     useEffect(() => {
         if (newFilter) {
@@ -119,6 +121,55 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
                 }
             }
             setAirportRankContent(newAirportRanking);
+            // Compute a small summary panel (total flights, total delays, delay %)
+            try {
+                const totalFlights = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_flights) || 0), 0);
+                const totalDelays = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_del15) || 0), 0);
+                const delayPct = totalFlights ? ((totalDelays / totalFlights) * 100).toFixed(2) : '0.00';
+                const carrierSet = new Set(filteredData.current.map(r => r.carrier));
+                const airportSet = new Set(filteredData.current.map(r => r.airport));
+
+                // Build delay reasons aggregation for pie chart
+                const reasonDefs = [
+                    { key: 'carrier_delay', label: 'Carrier', color: '#4e79a7' },
+                    { key: 'weather_delay', label: 'Weather', color: '#f28e2b' },
+                    { key: 'nas_delay', label: 'NAS', color: '#e15759' },
+                    { key: 'security_delay', label: 'Security', color: '#76b7b2' },
+                    { key: 'late_aircraft_delay', label: 'Late aircraft', color: '#59a14f' }
+                ];
+
+                const reasonItems = reasonDefs.map(def => ({
+                    label: def.label,
+                    value: filteredData.current.reduce((s, r) => s + (Number(r[def.key]) || 0), 0),
+                    color: def.color
+                }));
+
+                const totalReason = reasonItems.reduce((s, it) => s + it.value, 0) || 1;
+
+                setSummaryContent(
+                    <div style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
+                        <PieChart items={reasonItems} size={160} innerRadius={44} />
+                        <div>
+                            <h4>Delay reasons</h4>
+                            <table className='delayReasons'>
+                                <tbody>
+                                    {reasonItems.map((it, idx) => (
+                                        <tr key={idx}>
+                                            <td style={{width: '14px'}}><span style={{display:'inline-block', width:12, height:12, background: it.color, marginRight:8}}></span></td>
+                                            <td>{it.label}</td>
+                                            <td style={{paddingLeft:12}}>{it.value.toLocaleString()} ({((it.value / totalReason) * 100).toFixed(1)}%)</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div style={{marginTop:8, fontSize:12}}><strong>Total delays:</strong> {totalDelays.toLocaleString()}</div>
+                        </div>
+                    </div>
+                );
+            } catch (e) {
+                console.warn('Failed to compute summary', e);
+                setSummaryContent(null);
+            }
             setNewFilter(false);
         }
     }, [newFilter]);
@@ -144,6 +195,11 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
                         
                     </table>
                     <p>*Rankings calculated by number of delays divided by total flights</p>
+                </ExpandableCard>
+            </div>
+            <div id='summaryCard' className='card'>
+                <ExpandableCard title={'Delay Reasons'} initialDisplay={true} expandMode={'static'}>
+                    {summaryContent}
                 </ExpandableCard>
             </div>
         </div>
