@@ -23,26 +23,21 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
                 //Summarize relevant data by each carrier
             carrierMap.current.forEach((value, key) => {
                 //const carrierBox = document.getElementById(key + '_CarrierCheckbox');
-                //if (carrierBox && carrierBox.checked) {
-                    //Make sure all summarized data only added if they are a specific carrier
-                    let flights = filteredData.current.reduce((total, row) => {
+                //if (carrierBox && carrierBox.checked) {                    //Make sure all summarized data only added if they are a specific carrier
+                let flights = filteredData.current.reduce((total, row) => {
                         if (row.carrier === key) {
-                            return total + row.arr_flights;
+                            return total + Number(row.arr_flights);
                         }
                         return total;
                     }, 0);
 
                     let delays = filteredData.current.reduce((total, row) => {
                         if (row.carrier === key) {
-                            return total + row.arr_del15;
+                            return total + Number(row.arr_del15);
                         }
                         return total;
                     }, 0);
 
-                    //Push the html string and the data to be sorted into an array
-                    //rowInfo.push([flights, delays]);
-
-                    //let row = [flights, delays, delayTime, late, lateDelay, cancel, diverted, carrierIssue, carrierIssueTime];
                     for (let i = 0; i < top5Carrier.length; i++) {
                         //First check if ratio is larger. If equal ratio, compare the total number of flights. Prioritize higher flight number
                         if (top5Carrier[i] < delays / flights || (top5Carrier[i] == delays / flights && carrierFlights[i][2] < flights)) {
@@ -61,6 +56,8 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
             //Update ranking ordered list
             //Remove previous ranking items
             let newCarrierRanking = [];
+            console.log(top5Carrier);
+            console.log(carrierFlights);
             for (let i = 0; i < 5; i++) {
                 if (top5Carrier[i] >= 0 && carrierFlights[i][0].trim() != '') {
                     newCarrierRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{carrierFlights[i][0]}</td><td>{(top5Carrier[i] * 100).toFixed(2)}%</td></tr>);
@@ -81,14 +78,14 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
                     //Make sure all summarized data only added if they are a specific carrier
                     let flights = filteredData.current.reduce((total, row) => {
                         if (row.airport === key) {
-                            return total + row.arr_flights;
+                            return total + Number(row.arr_flights);
                         }
                         return total;
                     }, 0);
 
                     let delays = filteredData.current.reduce((total, row) => {
                         if (row.airport === key) {
-                            return total + row.arr_del15;
+                            return total + Number(row.arr_del15);
                         }
                         return total;
                     }, 0);
@@ -172,7 +169,7 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
             }
             setNewFilter(false);
         }
-    }, [newFilter]);
+    }, [newFilter, dataChanged]);
 
     return (<>
         <div className='row center'>
