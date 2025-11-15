@@ -12,14 +12,19 @@ export default function FirebaseAccess() {
 
     useLayoutEffect(() => {
         // Initialize Firebase
-        try {
-            console.log(import.meta.env.VITE_API_KEY);
-            console.log(import.meta.env.VITE_AUTH_DOMAIN);
-            console.log(import.meta.env.VITE_PROJECT_ID);
-            console.log(import.meta.env.VITE_STORAGE_BUCKET);
-            console.log(import.meta.env.VITE_MESSAGING_SENDER_ID);
-            console.log(import.meta.env.VITE_APP_ID);
-            console.log(import.meta.env.VITE_MEASUREMENT_ID);
+        
+        //Uncomment below to use local sample data instead of Firebase. DUring development. Saves on read times.
+        const path = './datasets/airlineSampleData.json';
+        fetch(path).then(response => {
+            response.text().then(data => {
+                let flightData = JSON.parse(data);
+                jsonSample.current = flightData;
+                setDataChanged(true);
+            });
+        });
+
+        //Uncomment below to use Firebase database
+        /*try {
             const firebaseConfig = {
                 apiKey: import.meta.env.VITE_API_KEY,
                 authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -36,7 +41,7 @@ export default function FirebaseAccess() {
             const db = getFirestore(app);
             databaseRef.current = db;
 
-            const collectionRef = collection(db, 'flightData');
+            const collectionRef = collection(db, 'allFlightData');
 
             const querySnapshot = query(collectionRef);
             const querySnapshotGet = getDocs(querySnapshot).then((querySnapshot) => {
@@ -44,14 +49,21 @@ export default function FirebaseAccess() {
                 querySnapshot.forEach((doc) => {
                     flightData.push(doc.data());
                 });
-                jsonSample.current = flightData;
-                console.log(flightData);
-                setDataChanged(true);
+                if (flightData.length == 1 && 'data' in flightData[0]) {
+                    jsonSample.current = flightData[0].data;
+                    console.log(flightData);
+                    setDataChanged(true);
+                }
+                else
+                {
+                    alert('Unexpected data format from server');
+                }
+
             });
         } catch (e) {
             alert('Unable to connect to server');
             console.log(e);
-        }
+        }*/
     }, []);
 
     return (<>
