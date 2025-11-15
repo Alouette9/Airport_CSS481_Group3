@@ -25,7 +25,8 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
     //Initialize filter elements and their events
     useEffect(() => {
         console.log(filteredData)
-
+        if(dataChanged)
+        {
         //Create carrier checkboxes
         let newCheckboxes = [];
         let arrayKey = 0;
@@ -55,7 +56,10 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
         });
         airportCount.current = arrayKey;
         setAirportCheckBoxes(newCheckboxes);
+        }
+    }, [dataChanged])
 
+    useEffect(() => {
         //Add submission event to filter data for other sections
         filterSubmit.current.addEventListener('click', () => { setFilterClick(true) });
 
@@ -76,8 +80,7 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
 
         highestDelayNum.current.addEventListener('change', (event) => {
             if(highestDelayNum.current.value < 0) highestDelayNum.current.value = 0;});
-
-    }, [])
+    }, []);
 
     useEffect(() => {
         let newCheckboxes = [];

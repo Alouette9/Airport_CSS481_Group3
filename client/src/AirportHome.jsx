@@ -3,69 +3,70 @@ import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
 
-export function AirportHome({ jsonSample }) {
+export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
     //Add states or refs here that may have to be props that are shared between components
     const carrierMap = useRef(new Map());
     const airportMap = useRef(new Map());
     const filteredData = useRef(jsonSample.current);
-    const [dataChanged, setDataChanged] = useState(false);
     const [newFilter, setNewFilter] = useState(false)
-    const latestDate = useRef([0,0]);
-    const earliestDate = useRef([9999,32]);
+    const latestDate = useRef([0, 0]);
+    const earliestDate = useRef([9999, 32]);
+    const [firstRender, setFirstRender] = useState(true);
 
     //To be ran only on intialization of the DOM once. 
     useLayoutEffect(() => {
-        //Iterate over JSON to gather max, min, and other display info
-        for (let i = 0; i < jsonSample.current.length; i++) {
-            //Check if in the carrierMap.current and already included
-            if (!carrierMap.current.has(jsonSample.current[i].carrier)) {
-                //Set map that Carrier is accounted for
-                carrierMap.current.set(jsonSample.current[i].carrier, jsonSample.current[i].carrier_name);
+        if (dataChanged || firstRender) {
+            //Iterate over JSON to gather max, min, and other display info
+            for (let i = 0; i < jsonSample.current.length; i++) {
+                //Check if in the carrierMap.current and already included
+                if (!carrierMap.current.has(jsonSample.current[i].carrier)) {
+                    //Set map that Carrier is accounted for
+                    carrierMap.current.set(jsonSample.current[i].carrier, jsonSample.current[i].carrier_name);
+                }
+                //Set map that airport is accounted for
+                if (!airportMap.current.has(jsonSample.current[i].airport)) {
+                    airportMap.current.set(jsonSample.current[i].airport, jsonSample.current[i].airport_name);
+                }
+                //Iterate to find max and min range of months
+                if (jsonSample.current[i].year < earliestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month < earliestDate.current[1])) {
+                    earliestDate.current[0] = jsonSample.current[i].year;
+                    earliestDate.current[1] = jsonSample.current[i].month;
+                }
+                if (jsonSample.current[i].year >= latestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month > earliestDate.current[1])) {
+                    latestDate.current[0] = jsonSample.current[i].year;
+                    latestDate.current[1] = jsonSample.current[i].month;
+                }
             }
-            //Set map that airport is accounted for
-            if (!airportMap.current.has(jsonSample.current[i].airport)) {
-                airportMap.current.set(jsonSample.current[i].airport, jsonSample.current[i].airport_name);
+
+            // Set sticky date inputs to the earliest and latest months found in the data
+            try {
+                const beginInput = document.getElementById('dateBeginMonth');
+                const endInput = document.getElementById('dateEndMonth');
+                const display = document.getElementById('dateDisplay');
+
+                const validEarliest = earliestDate.current[0] !== 9999 && earliestDate.current[1] >= 1 && earliestDate.current[1] <= 12;
+                const validLatest = latestDate.current[0] !== 0 || latestDate.current[1] !== 0;
+
+                function fmt([y, m]) {
+                    if (!y || !m) return '';
+                    const mm = String(m).padStart(2, '0');
+                    return `${y}-${mm}`;
+                }
+
+                if (beginInput && validEarliest) beginInput.value = fmt(earliestDate.current);
+                if (endInput && validLatest) endInput.value = fmt(latestDate.current);
+                if (display && validEarliest && validLatest) display.textContent = `Showing rankings for ${fmt(earliestDate.current)} to ${fmt(latestDate.current)}`;
+            } catch (e) {
+                // DOM may not be ready yet; safe to ignore
+                console.warn('Could not set date inputs automatically', e);
             }
-            //Iterate to find max and min range of months
-            if (jsonSample.current[i].year < earliestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month < earliestDate.current[1])) {
-                earliestDate.current[0] = jsonSample.current[i].year;
-                earliestDate.current[1] = jsonSample.current[i].month;
-            }
-            if (jsonSample.current[i].year >= latestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month > earliestDate.current[1])) {
-                latestDate.current[0] = jsonSample.current[i].year;
-                latestDate.current[1] = jsonSample.current[i].month;
-            }
+            setDataChanged(false);
+            //Cause all data dependent sections to initialize
+            filteredData.current = jsonSample.current;
+            setNewFilter(true);
+            setFirstRender(false);
         }
-        //Cause all data dependent sections to initialize
-        setNewFilter(true);
-
-        // Set sticky date inputs to the earliest and latest months found in the data
-        try {
-            const beginInput = document.getElementById('dateBeginMonth');
-            const endInput = document.getElementById('dateEndMonth');
-            const display = document.getElementById('dateDisplay');
-
-            const validEarliest = earliestDate.current[0] !== 9999 && earliestDate.current[1] >= 1 && earliestDate.current[1] <= 12;
-            const validLatest = latestDate.current[0] !== 0 || latestDate.current[1] !== 0;
-
-            function fmt([y, m]) {
-                if (!y || !m) return '';
-                const mm = String(m).padStart(2, '0');
-                return `${y}-${mm}`;
-            }
-
-            if (beginInput && validEarliest) beginInput.value = fmt(earliestDate.current);
-            if (endInput && validLatest) endInput.value = fmt(latestDate.current);
-            if (display && validEarliest && validLatest) display.textContent = `Showing rankings for ${fmt(earliestDate.current)} to ${fmt(latestDate.current)}`;
-        } catch (e) {
-            // DOM may not be ready yet; safe to ignore
-            console.warn('Could not set date inputs automatically', e);
-        }
-    }, []);
-
-    useEffect(() => {
-       
-    }, []);
+    }, [dataChanged, firstRender]);
 
     // Handle date-range submit from the sticky footer
     useEffect(() => {
@@ -141,16 +142,16 @@ export function AirportHome({ jsonSample }) {
         <Rankings dataChanged={dataChanged} filteredData={filteredData} newFilter={newFilter} setNewFilter={setNewFilter} carrierMap={carrierMap} airportMap={airportMap} />
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setNewFilter={setNewFilter} dataChanged={dataChanged} jsonSample={jsonSample}
-        carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
-            <div className="sticky-bottom">
-                <p align="center"><strong>Date range select</strong></p>
-                    <div className="toolRow">
-                        <input type="month" name="dateBeginMonth" id="dateBeginMonth" />
-                        to
-                        <input type="month" name="dateEndMonth" id="dateEndMonth" />
-                        <button id="dateSubmit">Submit</button>
-                    </div>
-                    <div id="dateDisplay"></div>
+            carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
+        <div className="sticky-bottom">
+            <p align="center"><strong>Date range select</strong></p>
+            <div className="toolRow">
+                <input type="month" name="dateBeginMonth" id="dateBeginMonth" />
+                to
+                <input type="month" name="dateEndMonth" id="dateEndMonth" />
+                <button id="dateSubmit">Submit</button>
             </div>
+            <div id="dateDisplay"></div>
+        </div>
     </>);
 }
