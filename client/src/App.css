@@ -257,6 +257,111 @@ h2 {
   z-index: 1000; /* Ensures it's on top of other elements */
 }
 
+.formControl button { margin-left: 4px; }
+
+
+/* https://codepen.io/predragdavidovic/pen/mdpMoWo */
+.toolRow {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+}
+
+.formControl {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #635a5a;
+}
+
+.sliders_control {
+  position: relative;
+  min-height: 20px;
+}
+
+.sticky-bottom p {
+  margin: 2px 0;
+  font-size: 13px;
+}
+
+.slidersControl {
+  position: relative;
+  width: 85%;
+  max-width: 600px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slidersControl input[type="range"] {
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #C6C6C6;
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #C6C6C6;
+  cursor: pointer;  
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  background: #f7f7f7;
+}
+
+input[type=range]::-webkit-slider-thumb:active {
+  box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+  -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+   opacity: 1;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; 
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  background-color: #C6C6C6;
+  pointer-events: none;
+}
+
+#fromSlider {
+  height: 0;
+  z-index: 1;
+}
+
+
 /* NavLink settings */
 .nav{
   list-style:none;
@@ -394,77 +499,6 @@ h2 {
   100% { width: 110vw; opacity: 0; transform: translateY(-3vh); }
 }
 
-
-/* https://codepen.io/predragdavidovic/pen/mdpMoWo */
-.toolRow {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    margin: auto;
-}
-
-.sliders_control {
-  position: relative;
-  min-height: 20px;
-}
-
-.form_control {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  color: #635a5a;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  pointer-events: all;
-  width: 24px;
-  height: 24px;
-  background-color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px #C6C6C6;
-  cursor: pointer;
-}
-
-input[type=range]::-moz-range-thumb {
-  -webkit-appearance: none;
-  pointer-events: all;
-  width: 24px;
-  height: 24px;
-  background-color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px #C6C6C6;
-  cursor: pointer;  
-}
-
-input[type=range]::-webkit-slider-thumb:hover {
-  background: #f7f7f7;
-}
-
-input[type=range]::-webkit-slider-thumb:active {
-  box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
-  -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
-}
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
-   opacity: 1;
-}
-
-input[type="range"] {
-  -webkit-appearance: none; 
-  appearance: none;
-  height: 2px;
-  width: 100%;
-  position: absolute;
-  background-color: #C6C6C6;
-  pointer-events: none;
-}
-
-#fromSlider {
-  height: 0;
-  z-index: 1;
-}
 
 /* NavLink settings */
 .nav{
