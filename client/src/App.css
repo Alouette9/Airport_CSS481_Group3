@@ -1,3 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap');
+
+html, body, #root {
+  margin: 0;
+    padding: 0;
+      height: 100%;
+      width: 100%;
+}
+
 body {
     padding-bottom: 400px;
 }
@@ -128,7 +137,7 @@ body {
 .bannerHeader {
     display:flex;
     position: relative;
-    background-image: url('../assets/sky.jpg');
+    background-image: url('./assets/sky.jpg');
     background-repeat: no-repeat;
     background-size:cover;
 }
@@ -137,6 +146,7 @@ h1 {
     font-size:60px;
 }
 
+/* Comment for now, changing new settings below
 .nav {
   list-style: none;
   margin: 0;
@@ -159,6 +169,7 @@ h1 {
 
 .nav li a:hover, .nav li a.active { background: #1565c0; }
 
+*/
 .positive {
     color:rgb(0, 255, 0);
     font-weight: bold;

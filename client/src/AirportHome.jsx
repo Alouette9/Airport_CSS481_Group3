@@ -3,15 +3,15 @@ import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
 
-export function AirportHome({ jsonSample }) {
+export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
     //Add states or refs here that may have to be props that are shared between components
     const carrierMap = useRef(new Map());
     const airportMap = useRef(new Map());
     const filteredData = useRef(jsonSample.current);
-    const [dataChanged, setDataChanged] = useState(false);
     const [newFilter, setNewFilter] = useState(false)
-    const latestDate = useRef([0,0]);
-    const earliestDate = useRef([9999,32]);
+    const latestDate = useRef([0, 0]);
+    const earliestDate = useRef([9999, 32]);
+    const [firstRender, setFirstRender] = useState(true);
 
     // Helper: convert YYYY-MM string (from type=month) to numeric month index
     function monthToIndex(monthStr) {
@@ -95,11 +95,7 @@ export function AirportHome({ jsonSample }) {
             // DOM may not be ready yet; safe to ignore
             console.warn('Could not set date inputs automatically', e);
         }
-    }, []);
-
-    useEffect(() => {
-       
-    }, []);
+    }, [dataChanged, firstRender]);
 
     useEffect(() => {
         const submitBtn = document.getElementById('dateSubmit');
@@ -209,5 +205,7 @@ export function AirportHome({ jsonSample }) {
                         </div>
                     </div>
             </div>
+            <div id="dateDisplay"></div>
+        </div>
     </>);
 }
