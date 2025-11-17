@@ -186,24 +186,20 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setNewFilter={setNewFilter} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
-            <div className="sticky-bottom">
-                <p align="center"><strong>Date range select</strong></p>
-                    <div className="toolRow">
-                        <div className="sliders_control">
-                            <input type="range" id="dateBeginRange" />
-                            <input type="range" id="dateEndRange"/>
-                        </div>
-                        <div className="form_control">
-                            <span id="dateBeginLabel"></span>
-                            to
-                            <span id="dateEndLabel"></span>
-                        </div>
-                        <div>
-                            <span id="dateDisplay"></span>
-                            &nbsp;
-                            <button id="dateSubmit">Submit</button>
-                        </div>
-                    </div>
+        <div className="sticky-bottom">
+            <p align="center"><strong>Date range select</strong></p>
+            <div className="toolRow">
+                <div className="slidersControl">
+                    <input type="range" id="dateBeginRange" />
+                    <input type="range" id="dateEndRange"/>
+                </div>
+                <div className="formControl">
+                    <span id="dateBeginLabel"></span>
+                    to
+                    <span id="dateEndLabel"></span>
+                    &nbsp;
+                    <button id="dateSubmit">Submit</button>
+                </div>
             </div>
             <div id="dateDisplay"></div>
         </div>
