@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ExpandableDrop } from "./ExpandableDrop";
 
 
-export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, setDataChanged, filteredData, jsonSample }) {
+export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, setDataChanged, filteredData, jsonSample, onFiltersApplied }) {
 
     const carrierFilters = useRef(null);
     const airportFilters = useRef(null);
@@ -179,11 +179,12 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
                 return row.arr_del15 >= Number(lowestDelayNum.current.value) && row.arr_del15 <= Number(highestDelayNum.current.value);
             })
 
-            console.log(newFilterData);
+            // Update the shared base used by the date-range selector so the date filter composes with these filters
+            if (typeof onFiltersApplied === 'function') onFiltersApplied(newFilterData);
 
             filteredData.current = newFilterData;
             setFilterClick(false);
-            setNewFilter(true);
+            setFilterSeq(s => s + 1);
         }
     }, [filterClick]);
 
