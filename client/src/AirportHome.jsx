@@ -71,26 +71,25 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
     // Handle date-range submit from the sticky footer
     useEffect(() => {
         const submitBtn = document.getElementById('dateSubmit');
-        const beginInput = document.getElementById('dateBeginMonth');
-        const endInput = document.getElementById('dateEndMonth');
+        const beginRange = document.getElementById('dateBeginRange');
+        const endRange = document.getElementById('dateEndRange');
         const display = document.getElementById('dateDisplay');
 
-        function monthToIndex(monthStr) {
-            // monthStr expected in format "YYYY-MM" from <input type="month">
-            if (!monthStr || monthStr.trim() === '') return null;
-            const parts = monthStr.split('-');
-            if (parts.length !== 2) return null;
-            const y = Number(parts[0]);
-            const m = Number(parts[1]);
-            if (Number.isNaN(y) || Number.isNaN(m)) return null;
-            return y * 12 + (m - 1);
+        function indexToMonthStr(index) {
+            if (index === null || index === undefined || Number.isNaN(Number(index))) return '';
+            const idx = Number(index);
+            const y = Math.floor(idx / 12);
+            const m = (idx % 12) + 1;
+            return `${y}-${String(m).padStart(2, '0')}`;
         }
 
         function onDateSubmit() {
-            const beginVal = beginInput ? beginInput.value : '';
-            const endVal = endInput ? endInput.value : '';
-            const beginIndex = monthToIndex(beginVal);
-            const endIndex = monthToIndex(endVal);
+            let beginIndex = null;
+            let endIndex = null;
+            if (beginRange && endRange) {
+                beginIndex = Number(beginRange.value);
+                endIndex = Number(endRange.value);
+            }
 
             if (beginIndex !== null && endIndex !== null && beginIndex > endIndex) {
                 alert('Invalid date range: start is after end');
@@ -112,8 +111,8 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
             filteredData.current = newFiltered;
             // show selection to user
             if (display) {
-                const b = beginVal || 'earliest';
-                const e = endVal || 'latest';
+                const b = beginIndex !== null ? indexToMonthStr(beginIndex) : 'earliest';
+                const e = endIndex !== null ? indexToMonthStr(endIndex) : 'latest';
                 display.textContent = `Showing rankings for ${b} to ${e}`;
             }
 
@@ -123,10 +122,55 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
             setDataChanged((prev) => !prev);
         }
 
+        function onRangeInput() {
+            const beginIndex = beginRange ? Number(beginRange.value) : null;
+            const endIndex = endRange ? Number(endRange.value) : null;
+            const beginLabel = document.getElementById('dateBeginLabel');
+            const endLabel = document.getElementById('dateEndLabel');
+            if (beginLabel) beginLabel.textContent = beginIndex !== null ? indexToMonthStr(beginIndex) : '';
+            if (endLabel) endLabel.textContent = endIndex !== null ? indexToMonthStr(endIndex) : '';
+            if (display) {
+                const b = beginIndex !== null ? indexToMonthStr(beginIndex) : 'earliest';
+                const e = endIndex !== null ? indexToMonthStr(endIndex) : 'latest';
+                display.textContent = `Showing rankings for ${b} to ${e}`;
+            }
+            // Visual: draw a filled track between the two handles
+            try {
+                if (beginRange && endRange) {
+                    const min = Number(beginRange.min);
+                    const max = Number(beginRange.max);
+                    const a = Number(beginRange.value);
+                    const b = Number(endRange.value);
+                    const startPct = ((Math.min(a, b) - min) / (max - min)) * 100;
+                    const endPct = ((Math.max(a, b) - min) / (max - min)) * 100;
+                    const trackColor = '#C6C6C6';
+                    const fillColor = '#387bbe';
+                    const gradient = `linear-gradient(90deg, ${trackColor} 0%, ${trackColor} ${startPct}%, ${fillColor} ${startPct}%, ${fillColor} ${endPct}%, ${trackColor} ${endPct}%, ${trackColor} 100%)`;
+                    beginRange.style.background = gradient;
+                    endRange.style.background = gradient;
+                }
+            } catch (err) {
+                // ignore if any calculation fails
+            }
+        }
+
         if (submitBtn) submitBtn.addEventListener('click', onDateSubmit);
+        if (beginRange) beginRange.addEventListener('input', onRangeInput);
+        if (endRange) endRange.addEventListener('input', onRangeInput);
+
+        // initialize track fill on mount
+        try {
+            if (beginRange && endRange) {
+                const evt = new Event('input');
+                beginRange.dispatchEvent(evt);
+                endRange.dispatchEvent(evt);
+            }
+        } catch (e) { }
 
         return () => {
             if (submitBtn) submitBtn.removeEventListener('click', onDateSubmit);
+            if (beginRange) beginRange.removeEventListener('input', onRangeInput);
+            if (endRange) endRange.removeEventListener('input', onRangeInput);
         };
     }, [filteredData, jsonSample, setNewFilter, setDataChanged]);
 
@@ -142,14 +186,21 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
         <Rankings dataChanged={dataChanged} filteredData={filteredData} newFilter={newFilter} setNewFilter={setNewFilter} carrierMap={carrierMap} airportMap={airportMap} />
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setNewFilter={setNewFilter} dataChanged={dataChanged} jsonSample={jsonSample}
-            carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
+        carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
         <div className="sticky-bottom">
             <p align="center"><strong>Date range select</strong></p>
             <div className="toolRow">
-                <input type="month" name="dateBeginMonth" id="dateBeginMonth" />
-                to
-                <input type="month" name="dateEndMonth" id="dateEndMonth" />
-                <button id="dateSubmit">Submit</button>
+                <div className="slidersControl">
+                    <input type="range" id="dateBeginRange" />
+                    <input type="range" id="dateEndRange"/>
+                </div>
+                <div className="formControl">
+                    <span id="dateBeginLabel"></span>
+                    to
+                    <span id="dateEndLabel"></span>
+                    &nbsp;
+                    <button id="dateSubmit">Submit</button>
+                </div>
             </div>
             <div id="dateDisplay"></div>
         </div>
