@@ -13,108 +13,82 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
     const earliestDate = useRef([9999, 32]);
     const [firstRender, setFirstRender] = useState(true);
 
-    // Helper: convert YYYY-MM string (from type=month) to numeric month index
-    function monthToIndex(monthStr) {
-        if (!monthStr || monthStr.trim() === '') return null;
-        const parts = monthStr.split('-');
-        if (parts.length !== 2) return null;
-        const y = Number(parts[0]);
-        const m = Number(parts[1]);
-        if (Number.isNaN(y) || Number.isNaN(m)) return null;
-        return y * 12 + (m - 1);
-    }
-
-    // Helper: convert numeric month index back to YYYY-MM string
-    function indexToMonthStr(index) {
-        if (index === null || index === undefined || Number.isNaN(Number(index))) return '';
-        const idx = Number(index);
-        const y = Math.floor(idx / 12);
-        const m = (idx % 12) + 1;
-        return `${y}-${String(m).padStart(2, '0')}`;
-    }
-
     //To be ran only on intialization of the DOM once. 
     useLayoutEffect(() => {
-        //Iterate over JSON to gather max, min, and other display info
-        for (let i = 0; i < jsonSample.current.length; i++) {
-            //Check if in the carrierMap.current and already included
-            if (!carrierMap.current.has(jsonSample.current[i].carrier)) {
-                //Set map that Carrier is accounted for
-                carrierMap.current.set(jsonSample.current[i].carrier, jsonSample.current[i].carrier_name);
-            }
-            //Set map that airport is accounted for
-            if (!airportMap.current.has(jsonSample.current[i].airport)) {
-                airportMap.current.set(jsonSample.current[i].airport, jsonSample.current[i].airport_name);
-            }
-            //Iterate to find max and min range of months
-            if (jsonSample.current[i].year < earliestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month < earliestDate.current[1])) {
-                earliestDate.current[0] = jsonSample.current[i].year;
-                earliestDate.current[1] = jsonSample.current[i].month;
-            }
-            if (jsonSample.current[i].year >= latestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month > earliestDate.current[1])) {
-                latestDate.current[0] = jsonSample.current[i].year;
-                latestDate.current[1] = jsonSample.current[i].month;
-            }
-        }
-        //Cause all data dependent sections to initialize
-        setNewFilter(true);
-
-        // Set sticky date inputs to the earliest and latest months found in the data
-        try {
-            const display = document.getElementById('dateDisplay');
-            const beginRange = document.getElementById('dateBeginRange');
-            const endRange = document.getElementById('dateEndRange');
-            const beginLabel = document.getElementById('dateBeginLabel');
-            const endLabel = document.getElementById('dateEndLabel');
-            const beginMonth = document.getElementById('dateBeginMonth');
-            const endMonth = document.getElementById('dateEndMonth');
-
-            const validEarliest = earliestDate.current[0] !== 9999 && earliestDate.current[1] >= 1 && earliestDate.current[1] <= 12;
-            const validLatest = latestDate.current[0] !== 0 || latestDate.current[1] !== 0;
-
-            const minIndex = validEarliest ? earliestDate.current[0] * 12 + (earliestDate.current[1] - 1) : null;
-            const maxIndex = validLatest ? latestDate.current[0] * 12 + (latestDate.current[1] - 1) : null;
-
-            if (beginRange && endRange && minIndex !== null && maxIndex !== null) {
-                beginRange.min = minIndex;
-                beginRange.max = maxIndex;
-                endRange.min = minIndex;
-                endRange.max = maxIndex;
-                beginRange.value = minIndex;
-                endRange.value = maxIndex;
-                if (beginLabel) beginLabel.textContent = indexToMonthStr(minIndex);
-                if (endLabel) endLabel.textContent = indexToMonthStr(maxIndex);
+        if (dataChanged || firstRender) {
+            //Iterate over JSON to gather max, min, and other display info
+            for (let i = 0; i < jsonSample.current.length; i++) {
+                //Check if in the carrierMap.current and already included
+                if (!carrierMap.current.has(jsonSample.current[i].carrier)) {
+                    //Set map that Carrier is accounted for
+                    carrierMap.current.set(jsonSample.current[i].carrier, jsonSample.current[i].carrier_name);
+                }
+                //Set map that airport is accounted for
+                if (!airportMap.current.has(jsonSample.current[i].airport)) {
+                    airportMap.current.set(jsonSample.current[i].airport, jsonSample.current[i].airport_name);
+                }
+                //Iterate to find max and min range of months
+                if (jsonSample.current[i].year < earliestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month < earliestDate.current[1])) {
+                    earliestDate.current[0] = jsonSample.current[i].year;
+                    earliestDate.current[1] = jsonSample.current[i].month;
+                }
+                if (jsonSample.current[i].year >= latestDate.current[0] || (jsonSample.current[i].year == earliestDate.current[0] && jsonSample.current[i].month > earliestDate.current[1])) {
+                    latestDate.current[0] = jsonSample.current[i].year;
+                    latestDate.current[1] = jsonSample.current[i].month;
+                }
             }
 
-            function fmtIdx(idx) { return idx === null ? '' : indexToMonthStr(Number(idx)); }
+            // Set sticky date inputs to the earliest and latest months found in the data
+            try {
+                const beginInput = document.getElementById('dateBeginMonth');
+                const endInput = document.getElementById('dateEndMonth');
+                const display = document.getElementById('dateDisplay');
 
-            if (beginMonth && validEarliest) beginMonth.value = indexToMonthStr(minIndex);
-            if (endMonth && validLatest) endMonth.value = indexToMonthStr(maxIndex);
-            if (display && minIndex !== null && maxIndex !== null) display.textContent = `Showing rankings for ${fmtIdx(minIndex)} to ${fmtIdx(maxIndex)}`;
-        } catch (e) {
-            // DOM may not be ready yet; safe to ignore
-            console.warn('Could not set date inputs automatically', e);
+                const validEarliest = earliestDate.current[0] !== 9999 && earliestDate.current[1] >= 1 && earliestDate.current[1] <= 12;
+                const validLatest = latestDate.current[0] !== 0 || latestDate.current[1] !== 0;
+
+                function fmt([y, m]) {
+                    if (!y || !m) return '';
+                    const mm = String(m).padStart(2, '0');
+                    return `${y}-${mm}`;
+                }
+
+                if (beginInput && validEarliest) beginInput.value = fmt(earliestDate.current);
+                if (endInput && validLatest) endInput.value = fmt(latestDate.current);
+                if (display && validEarliest && validLatest) display.textContent = `Showing rankings for ${fmt(earliestDate.current)} to ${fmt(latestDate.current)}`;
+            } catch (e) {
+                // DOM may not be ready yet; safe to ignore
+                console.warn('Could not set date inputs automatically', e);
+            }
+            setDataChanged(false);
+            //Cause all data dependent sections to initialize
+            filteredData.current = jsonSample.current;
+            setNewFilter(true);
+            setFirstRender(false);
         }
     }, [dataChanged, firstRender]);
 
+    // Handle date-range submit from the sticky footer
     useEffect(() => {
         const submitBtn = document.getElementById('dateSubmit');
         const beginRange = document.getElementById('dateBeginRange');
         const endRange = document.getElementById('dateEndRange');
-        const beginMonth = document.getElementById('dateBeginMonth');
-        const endMonth = document.getElementById('dateEndMonth');
         const display = document.getElementById('dateDisplay');
 
+        function indexToMonthStr(index) {
+            if (index === null || index === undefined || Number.isNaN(Number(index))) return '';
+            const idx = Number(index);
+            const y = Math.floor(idx / 12);
+            const m = (idx % 12) + 1;
+            return `${y}-${String(m).padStart(2, '0')}`;
+        }
+
         function onDateSubmit() {
-            // Prefer range inputs if present
             let beginIndex = null;
             let endIndex = null;
             if (beginRange && endRange) {
                 beginIndex = Number(beginRange.value);
                 endIndex = Number(endRange.value);
-            } else if (beginMonth || endMonth) {
-                beginIndex = beginMonth ? monthToIndex(beginMonth.value) : null;
-                endIndex = endMonth ? monthToIndex(endMonth.value) : null;
             }
 
             if (beginIndex !== null && endIndex !== null && beginIndex > endIndex) {
@@ -126,6 +100,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
             const base = filteredData.current && filteredData.current.length ? filteredData.current : jsonSample.current;
 
             const newFiltered = base.filter((row) => {
+                // Expect row to have `year` and `month` numeric fields
                 if (typeof row.year !== 'number' || typeof row.month !== 'number') return false;
                 const rowIndex = row.year * 12 + (row.month - 1);
                 if (beginIndex !== null && rowIndex < beginIndex) return false;
@@ -134,7 +109,6 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
             });
 
             filteredData.current = newFiltered;
-
             // show selection to user
             if (display) {
                 const b = beginIndex !== null ? indexToMonthStr(beginIndex) : 'earliest';
@@ -144,13 +118,13 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
 
             // Trigger ranking recompute
             setNewFilter(true);
+            // Also signal dataChanged to let Filters update their UI if needed
             setDataChanged((prev) => !prev);
         }
 
-        // Live update display when using range inputs
         function onRangeInput() {
-            const beginIndex = beginRange ? Number(beginRange.value) : (beginMonth ? monthToIndex(beginMonth.value) : null);
-            const endIndex = endRange ? Number(endRange.value) : (endMonth ? monthToIndex(endMonth.value) : null);
+            const beginIndex = beginRange ? Number(beginRange.value) : null;
+            const endIndex = endRange ? Number(endRange.value) : null;
             const beginLabel = document.getElementById('dateBeginLabel');
             const endLabel = document.getElementById('dateEndLabel');
             if (beginLabel) beginLabel.textContent = beginIndex !== null ? indexToMonthStr(beginIndex) : '';
@@ -160,11 +134,38 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
                 const e = endIndex !== null ? indexToMonthStr(endIndex) : 'latest';
                 display.textContent = `Showing rankings for ${b} to ${e}`;
             }
+            // Visual: draw a filled track between the two handles
+            try {
+                if (beginRange && endRange) {
+                    const min = Number(beginRange.min);
+                    const max = Number(beginRange.max);
+                    const a = Number(beginRange.value);
+                    const b = Number(endRange.value);
+                    const startPct = ((Math.min(a, b) - min) / (max - min)) * 100;
+                    const endPct = ((Math.max(a, b) - min) / (max - min)) * 100;
+                    const trackColor = '#C6C6C6';
+                    const fillColor = '#387bbe';
+                    const gradient = `linear-gradient(90deg, ${trackColor} 0%, ${trackColor} ${startPct}%, ${fillColor} ${startPct}%, ${fillColor} ${endPct}%, ${trackColor} ${endPct}%, ${trackColor} 100%)`;
+                    beginRange.style.background = gradient;
+                    endRange.style.background = gradient;
+                }
+            } catch (err) {
+                // ignore if any calculation fails
+            }
         }
 
         if (submitBtn) submitBtn.addEventListener('click', onDateSubmit);
         if (beginRange) beginRange.addEventListener('input', onRangeInput);
         if (endRange) endRange.addEventListener('input', onRangeInput);
+
+        // initialize track fill on mount
+        try {
+            if (beginRange && endRange) {
+                const evt = new Event('input');
+                beginRange.dispatchEvent(evt);
+                endRange.dispatchEvent(evt);
+            }
+        } catch (e) { }
 
         return () => {
             if (submitBtn) submitBtn.removeEventListener('click', onDateSubmit);
