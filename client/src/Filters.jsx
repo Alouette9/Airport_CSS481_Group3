@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ExpandableDrop } from "./ExpandableDrop";
 
 
-export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, setDataChanged, filteredData, jsonSample }) {
+export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, setDataChanged, filteredData, jsonSample, onFiltersApplied }) {
 
     const carrierFilters = useRef(null);
     const airportFilters = useRef(null);
@@ -24,8 +24,8 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
 
     //Initialize filter elements and their events
     useEffect(() => {
-        console.log(filteredData)
-
+        if(dataChanged)
+        {
         //Create carrier checkboxes
         let newCheckboxes = [];
         let arrayKey = 0;
@@ -55,7 +55,10 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
         });
         airportCount.current = arrayKey;
         setAirportCheckBoxes(newCheckboxes);
+        }
+    }, [dataChanged])
 
+    useEffect(() => {
         //Add submission event to filter data for other sections
         filterSubmit.current.addEventListener('click', () => { setFilterClick(true) });
 
@@ -76,8 +79,7 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
 
         highestDelayNum.current.addEventListener('change', (event) => {
             if(highestDelayNum.current.value < 0) highestDelayNum.current.value = 0;});
-
-    }, [])
+    }, []);
 
     useEffect(() => {
         let newCheckboxes = [];
@@ -162,7 +164,6 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
                 }
             }
 
-            console.log(airportArray)
 
             newFilterData = newFilterData.filter((row) => {
                 return airportArray.includes(row.airport);
@@ -176,17 +177,17 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
                 return row.arr_del15 >= Number(lowestDelayNum.current.value) && row.arr_del15 <= Number(highestDelayNum.current.value);
             })
 
-            console.log(newFilterData);
+            // Update the shared base used by the date-range selector so the date filter composes with these filters
+            if (typeof onFiltersApplied === 'function') onFiltersApplied(newFilterData);
 
             filteredData.current = newFilterData;
             setFilterClick(false);
-            setNewFilter(true);
+            setFilterSeq(s => s + 1);
         }
     }, [filterClick]);
 
 
     useEffect(() => {
-        console.log('carrier')
         if(selectAllCarriers)
         {
             let carrierBoxes = carrierFilters.current.children;
@@ -204,21 +205,15 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
     }, [selectAllCarriers]);
 
     useEffect(() => {
-        console.log('airports')
         if(selectAllAirports)
         {
             let airportBoxes = airportFilters.current.children;
             for (let i = 0; i < airportBoxes.length; i++) {
-                console.log('child')
                 if (airportBoxes[i].tagName == 'DIV') {
-                    console.log('div')
                     let children = airportBoxes[i].children;
                     if (children[0].tagName == 'INPUT' && children[0].type == 'checkbox' 
                         && children[0].className == 'airportCheckbox') {
                         children[0].checked = airportAllButton.current.checked;
-                        console.log(airportAllButton.current.checked)
-                        console.log(children[0].checked)
-                        console.log('checked')
                     }
                 }
             }
