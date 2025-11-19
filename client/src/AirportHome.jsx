@@ -1,4 +1,4 @@
-import { useEffect, useState, useLayoutEffect, useRef } from "react";
+import { useEffect, useState, useLayoutEffect, useRef, useCallback } from "react";
 import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
@@ -7,10 +7,26 @@ import  GeolocationRecommendation  from "./GeolocationRecommendation";
 export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMap, airportMap }) {
     //Add states or refs here that may have to be props that are shared between components
     const filteredData = useRef(jsonSample.current);
-    const [newFilter, setNewFilter] = useState(false)
+    const filtersOnlyRef = useRef(jsonSample.current); // base for composing filters (carrier/airport/etc.)
+    const [filterSeq, setFilterSeq] = useState(0)
     const latestDate = useRef([0, 0]);
     const earliestDate = useRef([9999, 32]);
     const [firstRender, setFirstRender] = useState(true);
+    
+    // Refs for form elements
+    const submitBtnRef = useRef(null);
+    const beginRangeRef = useRef(null);
+    const endRangeRef = useRef(null);
+    const displayRef = useRef(null);
+    
+    // Refs to track current slider values (prevent reset on re-render)
+    const sliderValuesRef = useRef({ begin: null, end: null });
+    const prevRangeRef = useRef({ begin: null, end: null });
+
+    // Callback used by Filters to update the base dataset that date-range composes on
+    const onFiltersApplied = useCallback((newBase) => {
+        if (Array.isArray(newBase)) filtersOnlyRef.current = newBase;
+    }, []);
 
     //To be ran only on intialization of the DOM once. 
     useLayoutEffect(() => {
@@ -39,8 +55,10 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
 
             // Set sticky date inputs to the earliest and latest months found in the data
             try {
-                const beginInput = document.getElementById('dateBeginMonth');
-                const endInput = document.getElementById('dateEndMonth');
+                const beginRange = document.getElementById('dateBeginRange');
+                const endRange = document.getElementById('dateEndRange');
+                const beginLabel = document.getElementById('dateBeginLabel');
+                const endLabel = document.getElementById('dateEndLabel');
                 const display = document.getElementById('dateDisplay');
 
                 const validEarliest = earliestDate.current[0] !== 9999 && earliestDate.current[1] >= 1 && earliestDate.current[1] <= 12;
@@ -52,82 +70,132 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
                     return `${y}-${mm}`;
                 }
 
-                if (beginInput && validEarliest) beginInput.value = fmt(earliestDate.current);
-                if (endInput && validLatest) endInput.value = fmt(latestDate.current);
-                if (display && validEarliest && validLatest) display.textContent = `Showing rankings for ${fmt(earliestDate.current)} to ${fmt(latestDate.current)}`;
+                function indexToMonthStr(index) {
+                    if (index === null || index === undefined || Number.isNaN(Number(index))) return '';
+                    const idx = Number(index);
+                    const y = Math.floor(idx / 12);
+                    const m = (idx % 12) + 1;
+                    return `${y}-${String(m).padStart(2, '0')}`;
+                }
+
+                if (validEarliest && validLatest) {
+                    const minIndex = earliestDate.current[0] * 12 + (earliestDate.current[1] - 1);
+                    const maxIndex = latestDate.current[0] * 12 + (latestDate.current[1] - 1);
+                    
+                    if (beginRange && endRange) {
+                        beginRange.min = minIndex;
+                        beginRange.max = maxIndex;
+                        endRange.min = minIndex;
+                        endRange.max = maxIndex;
+                        beginRange.value = minIndex;
+                        endRange.value = maxIndex;
+                    }
+                    if (beginLabel) beginLabel.textContent = indexToMonthStr(minIndex);
+                    if (endLabel) endLabel.textContent = indexToMonthStr(maxIndex);
+                    if (display) display.textContent = `Showing rankings for ${fmt(earliestDate.current)} to ${fmt(latestDate.current)}`;
+                }
             } catch (e) {
                 // DOM may not be ready yet; safe to ignore
                 console.warn('Could not set date inputs automatically', e);
             }
-            setDataChanged(false);
+                setDataChanged(false);
             //Cause all data dependent sections to initialize
             filteredData.current = jsonSample.current;
-            setNewFilter(true);
+            setFilterSeq(s => s + 1);
             setFirstRender(false);
         }
     }, [dataChanged, firstRender]);
 
     // Handle date-range submit from the sticky footer
-    useEffect(() => {
-        const submitBtn = document.getElementById('dateSubmit');
-        const beginInput = document.getElementById('dateBeginMonth');
-        const endInput = document.getElementById('dateEndMonth');
-        const display = document.getElementById('dateDisplay');
+    const onDateSubmit = useCallback(() => {
+        const beginRange = beginRangeRef.current;
+        const endRange = endRangeRef.current;
+        const display = displayRef.current;
+        
+        // Store current values so they don't get reset
+        const beginIndex = Number(beginRange.value);
+        const endIndex = Number(endRange.value);
+        sliderValuesRef.current = { begin: beginIndex, end: endIndex };
 
-        function monthToIndex(monthStr) {
-            // monthStr expected in format "YYYY-MM" from <input type="month">
-            if (!monthStr || monthStr.trim() === '') return null;
-            const parts = monthStr.split('-');
-            if (parts.length !== 2) return null;
-            const y = Number(parts[0]);
-            const m = Number(parts[1]);
-            if (Number.isNaN(y) || Number.isNaN(m)) return null;
-            return y * 12 + (m - 1);
+        if (beginIndex > endIndex) {
+            alert('Invalid date range: start is after end');
+            return;
         }
 
-        function onDateSubmit() {
-            const beginVal = beginInput ? beginInput.value : '';
-            const endVal = endInput ? endInput.value : '';
-            const beginIndex = monthToIndex(beginVal);
-            const endIndex = monthToIndex(endVal);
+        // Base data: use the filters-only base so date-range composes with other filters
+        const base = (Array.isArray(filtersOnlyRef.current) && filtersOnlyRef.current.length) ? filtersOnlyRef.current : jsonSample.current;
 
-            if (beginIndex !== null && endIndex !== null && beginIndex > endIndex) {
-                alert('Invalid date range: start is after end');
-                return;
+        prevRangeRef.current = { begin: beginIndex, end: endIndex };
+
+        const newFiltered = base.filter((row) => {
+            if (typeof row.year !== 'number' || typeof row.month !== 'number') return false;
+            const rowIndex = row.year * 12 + (row.month - 1);
+            if (rowIndex < beginIndex) return false;
+            if (rowIndex > endIndex) return false;
+            return true;
+        });
+
+        filteredData.current = newFiltered;
+        // Trigger rankings update by incrementing sequence
+        setFilterSeq(s => s + 1);
+
+        // Restore slider values after state change
+        setTimeout(() => {
+            if (beginRange && endRange && sliderValuesRef.current) {
+                beginRange.value = sliderValuesRef.current.begin;
+                endRange.value = sliderValuesRef.current.end;
             }
+        }, 0);
+    }, []);
 
-            // Base data: use the current filteredData (so date range composes with other filters)
-            const base = filteredData.current && filteredData.current.length ? filteredData.current : jsonSample.current;
-
-            const newFiltered = base.filter((row) => {
-                // Expect row to have `year` and `month` numeric fields
-                if (typeof row.year !== 'number' || typeof row.month !== 'number') return false;
-                const rowIndex = row.year * 12 + (row.month - 1);
-                if (beginIndex !== null && rowIndex < beginIndex) return false;
-                if (endIndex !== null && rowIndex > endIndex) return false;
-                return true;
-            });
-
-            filteredData.current = newFiltered;
-            // show selection to user
+        const onRangeInput = useCallback(() => {
+            const beginRange = beginRangeRef.current;
+            const endRange = endRangeRef.current;
+            const display = displayRef.current;
+            
+            const beginIndex = Number(beginRange.value);
+            const endIndex = Number(endRange.value);
+            sliderValuesRef.current = { begin: beginIndex, end: endIndex };
+            
+            function indexToMonthStr(index) {
+                if (index === null || index === undefined || Number.isNaN(Number(index))) return '';
+                const idx = Number(index);
+                const y = Math.floor(idx / 12);
+                const m = (idx % 12) + 1;
+                return `${y}-${String(m).padStart(2, '0')}`;
+            }
+            
+            const beginLabel = document.getElementById('dateBeginLabel');
+            const endLabel = document.getElementById('dateEndLabel');
+            if (beginLabel) beginLabel.textContent = indexToMonthStr(beginIndex);
+            if (endLabel) endLabel.textContent = indexToMonthStr(endIndex);
             if (display) {
-                const b = beginVal || 'earliest';
-                const e = endVal || 'latest';
+                const b = indexToMonthStr(beginIndex);
+                const e = indexToMonthStr(endIndex);
                 display.textContent = `Showing rankings for ${b} to ${e}`;
             }
+        }, []);
 
-            // Trigger ranking recompute
-            setNewFilter(true);
-            // Also signal dataChanged to let Filters update their UI if needed
-            setDataChanged((prev) => !prev);
-        }
+    useEffect(() => {
+        const submitBtn = submitBtnRef.current;
+        const beginRange = beginRangeRef.current;
+        const endRange = endRangeRef.current;
 
-        if (submitBtn) submitBtn.addEventListener('click', onDateSubmit);
+        if (!submitBtn || !beginRange || !endRange) return;
+
+        submitBtn.addEventListener('click', onDateSubmit);
+        beginRange.addEventListener('input', onRangeInput);
+        endRange.addEventListener('input', onRangeInput);
+
+        // Trigger initial label update
+        onRangeInput();
 
         return () => {
-            if (submitBtn) submitBtn.removeEventListener('click', onDateSubmit);
+            submitBtn.removeEventListener('click', onDateSubmit);
+            beginRange.removeEventListener('input', onRangeInput);
+            endRange.removeEventListener('input', onRangeInput);
         };
-    }, [filteredData, jsonSample, setNewFilter, setDataChanged]);
+    }, [onDateSubmit, onRangeInput]);
 
     //Insert your components here!
     return (<>
@@ -141,17 +209,24 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
         <Rankings dataChanged={dataChanged} filteredData={filteredData} newFilter={newFilter} setNewFilter={setNewFilter} carrierMap={carrierMap} airportMap={airportMap} />
         <GeolocationRecommendation jsonSample={jsonSample} filteredData={filteredData} newFilter={newFilter}/>
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
-        <Filters setNewFilter={setNewFilter} dataChanged={dataChanged} jsonSample={jsonSample}
-            carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>
+        <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
+        carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
         <div className="sticky-bottom">
             <p align="center"><strong>Date range select</strong></p>
             <div className="toolRow">
-                <input type="month" name="dateBeginMonth" id="dateBeginMonth" />
-                to
-                <input type="month" name="dateEndMonth" id="dateEndMonth" />
-                <button id="dateSubmit">Submit</button>
+                <div className="slidersControl">
+                    <input type="range" id="dateBeginRange" ref={beginRangeRef} />
+                    <input type="range" id="dateEndRange" ref={endRangeRef} />
+                </div>
+                <div className="formControl">
+                    <span id="dateBeginLabel"></span>
+                    to
+                    <span id="dateEndLabel"></span>
+                    &nbsp;
+                    <button id="dateSubmit" ref={submitBtnRef}>Submit</button>
+                </div>
             </div>
-            <div id="dateDisplay"></div>
+            <div id="dateDisplay" ref={displayRef}></div>
         </div>
     </>);
 }

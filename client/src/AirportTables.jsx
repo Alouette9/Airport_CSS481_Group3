@@ -1245,8 +1245,6 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
                         alert('Flight Number Range not Entered');
                         return;
                     }
-                    console.log(flightNumBegin.value)
-                    console.log(flightNumEnd.value)
                     if (Number(flightNumBegin.value) > Number(flightNumEnd.value)) {
                         alert('Flight Number Range is Invalid');
                         return;
