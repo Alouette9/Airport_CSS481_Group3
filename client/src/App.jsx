@@ -5,7 +5,8 @@ import { AirportTables } from './AirportTables';
 import { AirportHome } from './AirportHome';
 import { useRef, useState, useCallback, useLayoutEffect } from 'react';
 import FlightTransition from './FlightTransition';
-import DataAdmin from './DataAdmin';
+import ChatBox from "./ChatBox";
+
 
 export default function App({jsonSample, databaseRef, dataChanged, setDataChanged, docIDs}) {
 
@@ -46,6 +47,7 @@ export default function App({jsonSample, databaseRef, dataChanged, setDataChange
             </Routes>
 
             <FlightTransition playing={playing} />
+            <ChatBox />
         </>
     )
 }
