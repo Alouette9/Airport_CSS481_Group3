@@ -24,7 +24,6 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
 
     //Initialize filter elements and their events
     useEffect(() => {
-        console.log(filteredData)
         if(dataChanged)
         {
         //Create carrier checkboxes
@@ -165,7 +164,6 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
                 }
             }
 
-            console.log(airportArray)
 
             newFilterData = newFilterData.filter((row) => {
                 return airportArray.includes(row.airport);
@@ -179,7 +177,6 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
                 return row.arr_del15 >= Number(lowestDelayNum.current.value) && row.arr_del15 <= Number(highestDelayNum.current.value);
             })
 
-            console.log(newFilterData);
 
             filteredData.current = newFilterData;
             setFilterClick(false);
@@ -189,7 +186,6 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
 
 
     useEffect(() => {
-        console.log('carrier')
         if(selectAllCarriers)
         {
             let carrierBoxes = carrierFilters.current.children;
@@ -207,21 +203,15 @@ export function Filters({ setNewFilter, dataChanged, carrierMap, airportMap, set
     }, [selectAllCarriers]);
 
     useEffect(() => {
-        console.log('airports')
         if(selectAllAirports)
         {
             let airportBoxes = airportFilters.current.children;
             for (let i = 0; i < airportBoxes.length; i++) {
-                console.log('child')
                 if (airportBoxes[i].tagName == 'DIV') {
-                    console.log('div')
                     let children = airportBoxes[i].children;
                     if (children[0].tagName == 'INPUT' && children[0].type == 'checkbox' 
                         && children[0].className == 'airportCheckbox') {
                         children[0].checked = airportAllButton.current.checked;
-                        console.log(airportAllButton.current.checked)
-                        console.log(children[0].checked)
-                        console.log('checked')
                     }
                 }
             }

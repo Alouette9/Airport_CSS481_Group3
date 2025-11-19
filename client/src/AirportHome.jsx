@@ -2,11 +2,10 @@ import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
+import  GeolocationRecommendation  from "./GeolocationRecommendation";
 
-export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
+export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMap, airportMap }) {
     //Add states or refs here that may have to be props that are shared between components
-    const carrierMap = useRef(new Map());
-    const airportMap = useRef(new Map());
     const filteredData = useRef(jsonSample.current);
     const [newFilter, setNewFilter] = useState(false)
     const latestDate = useRef([0, 0]);
@@ -15,7 +14,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
 
     //To be ran only on intialization of the DOM once. 
     useLayoutEffect(() => {
-        if (dataChanged || firstRender) {
+        if ((dataChanged || firstRender) && Array.isArray(jsonSample.current) && jsonSample.current.length > 0) {
             //Iterate over JSON to gather max, min, and other display info
             for (let i = 0; i < jsonSample.current.length; i++) {
                 //Check if in the carrierMap.current and already included
@@ -140,6 +139,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
             </div>
         </div>
         <Rankings dataChanged={dataChanged} filteredData={filteredData} newFilter={newFilter} setNewFilter={setNewFilter} carrierMap={carrierMap} airportMap={airportMap} />
+        <GeolocationRecommendation jsonSample={jsonSample} filteredData={filteredData} newFilter={newFilter}/>
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setNewFilter={setNewFilter} dataChanged={dataChanged} jsonSample={jsonSample}
             carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged}></Filters>

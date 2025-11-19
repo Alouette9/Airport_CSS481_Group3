@@ -19,7 +19,6 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
             carrierFlights.fill(['', -1, -1]);
             top5Carrier.fill(-1);
 
-            console.log(filteredData)
                 //Summarize relevant data by each carrier
             carrierMap.current.forEach((value, key) => {
                 //const carrierBox = document.getElementById(key + '_CarrierCheckbox');
@@ -56,8 +55,7 @@ export function Rankings({ filteredData, dataChanged, setNewFilter, newFilter, c
             //Update ranking ordered list
             //Remove previous ranking items
             let newCarrierRanking = [];
-            console.log(top5Carrier);
-            console.log(carrierFlights);
+
             for (let i = 0; i < 5; i++) {
                 if (top5Carrier[i] >= 0 && carrierFlights[i][0].trim() != '') {
                     newCarrierRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{carrierFlights[i][0]}</td><td>{(top5Carrier[i] * 100).toFixed(2)}%</td></tr>);
