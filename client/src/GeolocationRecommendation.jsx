@@ -1,7 +1,7 @@
 import { use, useEffect, useState, useRef } from "react";
 import { ExpandableCard } from "./ExpandableCard";
 
-export default function GeolocationRecommendation({ newFilter, filteredData, jsonSample }) {
+export default function GeolocationRecommendation({ filterSeq, filteredData, jsonSample }) {
     const [recContent, setRecContent] = useState([]);
     const region = useRef(null);
     const regionName = useRef(null);
@@ -139,7 +139,7 @@ export default function GeolocationRecommendation({ newFilter, filteredData, jso
             setRecContent(<div className="flexRow">{jsx}</div>);
             
         }
-    }, [regionFound, newFilter]);
+    }, [regionFound, filterSeq]);
 
     //Get user's IP-based region
     const getIP = () => {

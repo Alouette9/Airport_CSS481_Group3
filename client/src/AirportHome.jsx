@@ -12,7 +12,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
     const latestDate = useRef([0, 0]);
     const earliestDate = useRef([9999, 32]);
     const [firstRender, setFirstRender] = useState(true);
-    
+
     // Refs for form elements
     const submitBtnRef = useRef(null);
     const beginRangeRef = useRef(null);
@@ -206,8 +206,8 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
                 </div>
             </div>
         </div>
-        <Rankings dataChanged={dataChanged} filteredData={filteredData} newFilter={newFilter} setNewFilter={setNewFilter} carrierMap={carrierMap} airportMap={airportMap} />
-        <GeolocationRecommendation jsonSample={jsonSample} filteredData={filteredData} newFilter={newFilter}/>
+        <Rankings dataChanged={dataChanged} filteredData={filteredData} setFilterSeq={setFilterSeq} filterSeq={filterSeq} carrierMap={carrierMap} airportMap={airportMap} />
+        <GeolocationRecommendation jsonSample={jsonSample} filteredData={filteredData} filterSeq={filterSeq}/>
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
