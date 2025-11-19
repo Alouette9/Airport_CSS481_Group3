@@ -406,7 +406,7 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
                 console.log(target)
                 let property = '';
 
-                if(newValue === originalValue) {
+                if (newValue === originalValue) {
                     cancelEditField(target, originalValue);
                     return;
                 }
@@ -710,66 +710,66 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
             </div>
             <button onClick={() => { setNewEntry(true) }}>Submit</button>
         </div>
-        <div>
-            <h2>Update Data</h2>
-            <div className='toolRow'>
-                <label htmlFor="searchMethod">Search Method:</label>
+        <h2>Update Data</h2>
+        <div className='flexRow'>
+            <div>
+                <label htmlFor="searchMethod">Search Method: </label>
                 <select name="searchMethod" ref={searchMethod} defaultValue={'0'} onChange={() => setSelectChange(true)}>
                     <option value="0">Carrier</option>
                     <option value="1">Airport</option>
                 </select>
-                <div ref={carrierUpdate}>
-                    <label htmlFor="carrierSelect">Carrier:</label>
-                    <select defaultValue={''} name="carrierSelect" ref={carrierSelect}>
-                        <option value="" hidden>Select Carrier</option>
-                        {carrierOptions}
-                    </select>
-                </div>
+            </div>
+            <div ref={carrierUpdate}>
+                <label htmlFor="carrierSelect">Carrier: </label>
+                <select defaultValue={''} name="carrierSelect" ref={carrierSelect}>
+                    <option value="" hidden>Select Carrier</option>
+                    {carrierOptions}
+                </select>
+            </div>
 
-                <div ref={airportUpdate}>
-                    <label htmlFor="airportSelect">Airport:</label>
-                    <select defaultValue={''} name='airportSelect' ref={airportSelect}>
-                        <option value="" hidden>Select Airports</option>
-                        {airportOptions}
-                    </select>
-                </div>
-                <button onClick={() => setSearchData(true)}>Search</button>
+            <div ref={airportUpdate}>
+                <label htmlFor="airportSelect">Airport: </label>
+                <select defaultValue={''} name='airportSelect' ref={airportSelect}>
+                    <option value="" hidden>Select Airports</option>
+                    {airportOptions}
+                </select>
             </div>
-            <div className='toolRow'>
-                <button onClick={() => setDeleteData(true)}>Delete</button>
-            </div>
-            <div className="overFlowBox">
-                <table ref={tableRef}>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Date</th>
-                            <th>Carrier Code</th>
-                            <th>Carrier Name</th>
-                            <th>Airport Code</th>
-                            <th>Airport Name</th>
-                            <th>Flights</th>
-                            <th>Delays</th>
-                            <th>Delay Time</th>
-                            <th>Carrier Delays</th>
-                            <th>Carrier Delay Time</th>
-                            <th>Weather Delays</th>
-                            <th>Weather Delay Time</th>
-                            <th>Traffic Delays</th>
-                            <th>Traffic Delay Time</th>
-                            <th>Cancellations</th>
-                            <th>Security Delays</th>
-                            <th>Security Delay Time</th>
-                            <th>Late Aircraft Delays</th>
-                            <th>Late Aircraft Delay Time</th>
-                            <th>Diversions</th>
-                        </tr>
-                    </thead>
-                    <tbody ref={bodyRef}>
-                        {tableBody}
-                    </tbody>
-                </table>
-            </div>
+            <button onClick={() => setSearchData(true)}>Search</button>
+        </div>
+        <div className='flexRow'>
+            <button onClick={() => setDeleteData(true)}>Delete</button>
+        </div>
+        <div className="overFlowBox">
+            <table ref={tableRef}>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Carrier Code</th>
+                        <th>Carrier Name</th>
+                        <th>Airport Code</th>
+                        <th>Airport Name</th>
+                        <th>Flights</th>
+                        <th>Delays</th>
+                        <th>Delay Time</th>
+                        <th>Carrier Delays</th>
+                        <th>Carrier Delay Time</th>
+                        <th>Weather Delays</th>
+                        <th>Weather Delay Time</th>
+                        <th>Traffic Delays</th>
+                        <th>Traffic Delay Time</th>
+                        <th>Cancellations</th>
+                        <th>Security Delays</th>
+                        <th>Security Delay Time</th>
+                        <th>Late Aircraft Delays</th>
+                        <th>Late Aircraft Delay Time</th>
+                        <th>Diversions</th>
+                    </tr>
+                </thead>
+                <tbody ref={bodyRef}>
+                    {tableBody}
+                </tbody>
+            </table>
         </div>
     </>);
 }
