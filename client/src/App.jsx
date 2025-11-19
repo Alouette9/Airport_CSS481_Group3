@@ -5,6 +5,8 @@ import { AirportTables } from './AirportTables';
 import { AirportHome } from './AirportHome';
 import { useRef, useState, useCallback } from 'react';
 import FlightTransition from './FlightTransition';
+import ChatBox from "./ChatBox";
+
 
 export default function App() {
 
@@ -501,6 +503,7 @@ export default function App() {
             </Routes>
 
             <FlightTransition playing={playing} />
+            <ChatBox />
         </>
     )
 }
