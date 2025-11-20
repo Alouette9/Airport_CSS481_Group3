@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import './App.css';
 
-export function ExpandableCard({ title, children, initialDisplay, expandMode }) {
+export function ExpandableCard({ title, children, initialDisplay, expandMode, scrollable = false }) {
     const expandButton = useRef(null);
     const expandText = useRef(null);
     const expandSection = useRef(null);
@@ -13,6 +13,7 @@ export function ExpandableCard({ title, children, initialDisplay, expandMode }) 
     const [buttonIcon, setButtonIcon] = useState(null);
 
     useLayoutEffect(() => {
+
         //Absolute mode allows for overlays such as for filters over other elements. Static is for expandable sections
         //such as card for content like charts
         if(expandMode == 'absolute' || expandMode == 'static')
@@ -34,6 +35,7 @@ export function ExpandableCard({ title, children, initialDisplay, expandMode }) 
             content.current.style.display = 'none';
             setButtonIcon(<MdExpandLess/>);
         }
+
     }, []);
 
     useEffect(() => {
@@ -74,7 +76,16 @@ export function ExpandableCard({ title, children, initialDisplay, expandMode }) 
                 <button ref={expandButton}>{buttonIcon}</button>
                 <h3  ref={expandText}>{title}</h3>
             </div>
-            <div ref={content} className={'cardContent'}>
+            <div
+            ref={content}
+            className={'cardContent'}
+            style={scrollable ? {
+                maxHeight: '300px',
+                overflowY: 'scroll',
+                paddingBottom: '200px',
+                boxSizing: 'border-box'
+            } : {}}
+            >
                 {children}
             </div>
         </div >

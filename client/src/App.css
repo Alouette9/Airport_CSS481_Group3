@@ -361,7 +361,6 @@ input[type="range"] {
   z-index: 1;
 }
 
-
 /* NavLink settings */
 .nav{
   list-style:none;
@@ -636,3 +635,4 @@ input[type="range"] {
   60%  { width: 80vw; opacity: 1; transform: translateY(-2vh); }
   100% { width: 110vw; opacity: 0; transform: translateY(-3vh); }
 }
+

@@ -1,0 +1,72 @@
+[
+  {
+    "carrier_name": "Endeavor Air Inc.",
+    "reviewer_name": "Emily Carter",
+    "review_date": "2017-04-12",
+    "star_rating": 5,
+    "review_description": "Fantastic experience! The crew was friendly, seats were comfortable, and the flight arrived early."
+  },
+  {
+    "carrier_name": "JetBlue Airways",
+    "reviewer_name": "Daniel Ortiz",
+    "review_date": "2018-06-21",
+    "star_rating": 3,
+    "review_description": "Decent flight overall, but the check-in line was very slow and caused unnecessary stress."
+  },
+  {
+    "carrier_name": "Republic Airline",
+    "reviewer_name": "Mina Lee",
+    "review_date": "2019-03-09",
+    "star_rating": 4,
+    "review_description": "Smooth flight with great in-flight entertainment. Legroom could be better."
+  },
+  {
+    "carrier_name": "Mesa Airlines Inc.",
+    "reviewer_name": "Jamal Brooks",
+    "review_date": "2020-11-02",
+    "star_rating": 2,
+    "review_description": "Several delays and poor communication from the airline. The staff seemed overwhelmed."
+  },
+  {
+    "carrier_name": "ExpressJet Airlines Inc.",
+    "reviewer_name": "Caroline White",
+    "review_date": "2017-09-30",
+    "star_rating": 5,
+    "review_description": "Excellent service! Clean cabin, friendly crew, and delicious snacks."
+  },
+  {
+    "carrier_name": "United Air Lines Inc",
+    "reviewer_name": "Victor Chen",
+    "review_date": "2018-02-14",
+    "star_rating": 4,
+    "review_description": "Comfortable flight and easy boarding process. Would fly again."
+  },
+  {
+    "carrier_name": "JetBlue Airways",
+    "reviewer_name": "Sarah Johnson",
+    "review_date": "2019-12-05",
+    "star_rating": 1,
+    "review_description": "Lost my luggage and took days to resolve the issue. Very disappointed."
+  },
+  {
+    "carrier_name": "American Airlines Inc.",
+    "reviewer_name": "Luis Martinez",
+    "review_date": "2020-08-17",
+    "star_rating": 4,
+    "review_description": "Good experience overall. Flight was smooth and staff was polite."
+  },
+  {
+    "carrier_name": "SkyWest Airlines Inc.",
+    "reviewer_name": "Ava Patel",
+    "review_date": "2017-01-23",
+    "star_rating": 3,
+    "review_description": "Average service. Nothing remarkable, but nothing terrible either."
+  },
+  {
+    "carrier_name": "Southwest Airlines Co.",
+    "reviewer_name": "Michael Stevens",
+    "review_date": "2018-10-11",
+    "star_rating": 5,
+    "review_description": "One of the best flights I've taken. Spacious seating and excellent customer service."
+  }
+]

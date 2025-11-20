@@ -1,33 +1,63 @@
-export function PieChart({ items, size = 160}) {
-        const cx = size / 2;
-        const cy = size / 2;
-        const r = size / 2;
+// tutorial:
+// https://www.amcharts.com/docs/v4/tutorials/display-tooltip-on-piechart-slice-click/
+// https://www.amcharts.com/docs/v4/tutorials/re-arranging-elements-of-the-chart-legend/
+// https://www.amcharts.com/docs/v4/concepts/legend/
 
-        const total = items.reduce((s, it) => s + Math.max(0, it.value), 0) || 1;
+import React, { useLayoutEffect, useRef } from 'react';
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
-        let cumulative = 0;
+am4core.useTheme(am4themes_animated);
 
-        function polarToCartesian(cx, cy, r, angleDeg) {
-            const angleRad = (angleDeg - 90) * Math.PI / 180.0;
-            return { x: cx + (r * Math.cos(angleRad)), y: cy + (r * Math.sin(angleRad)) };
-        }
+export function PieChart({ data = null, items = null, width = 350, height = 350 }) {
+        const containerRef = useRef(null);
+        const chartRef = useRef(null);
 
-        function describeArc(cx, cy, r, startAngle, endAngle) {
-            const start = polarToCartesian(cx, cy, r, endAngle);
-            const end = polarToCartesian(cx, cy, r, startAngle);
-            const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-            return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
-        }
+        useLayoutEffect(() => {
+                const chart = am4core.create(containerRef.current, am4charts.PieChart);
+                chart.rtl = false;
 
-        return (
-            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-                {items.map((it, idx) => {
-                    const start = (cumulative / total) * 360;
-                    cumulative += Math.max(0, it.value);
-                    const end = (cumulative / total) * 360;
-                    const path = describeArc(cx, cy, r, start, end);
-                    return <path key={idx} d={path} fill={it.color || '#888'} stroke="#fff" strokeWidth={1} />;
-                })}
-            </svg>
-        );
-    }
+                const input = items || data || [];
+                chart.data = input.map(it => ({ category: it.label || it.category || '', value: Number(it.value) || 0, color: it.color }));
+
+                const pieSeries = chart.series.push(new am4charts.PieSeries());
+                pieSeries.dataFields.value = 'value';
+                pieSeries.dataFields.category = 'category';
+                pieSeries.slices.template.propertyFields.fill = 'color';
+                pieSeries.slices.template.states.getKey('active').properties.shiftRadius = 0;
+                pieSeries.slices.template.tooltipText = '{category}: {value}';
+
+                // legend
+                chart.legend = new am4charts.Legend();
+                chart.legend.position = 'right';
+
+                // white border around each Slice
+                pieSeries.slices.template.stroke = am4core.color("#fff");
+                pieSeries.slices.template.strokeWidth = 1;
+                pieSeries.slices.template.strokeOpacity = 1;
+                pieSeries.slices.template
+                  // change the cursor on hover to make it apparent
+                  // the object can be interacted with
+                    .cursorOverStyle = [
+                        {
+                        "property": "cursor",
+                        "value": "pointer"
+                        }
+                    ];
+
+                chartRef.current = chart;
+
+                return () => {
+                        try {
+                                if (chart) chart.dispose();
+                        } catch (e) {
+                                // ignore dispose errors
+                        }
+                };
+        }, [data, items]);
+
+        return <div ref={containerRef} style={{ width, height }} />;
+}
+
+export default PieChart;

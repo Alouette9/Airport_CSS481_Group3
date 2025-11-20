@@ -2,8 +2,10 @@ import { useEffect, useState, useLayoutEffect, useRef, useCallback } from "react
 import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
+import reviews from "./datasets/airlineReviews.json";
+import Reviews from "./Reviews";
 
-export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
+export function AirportHome({ jsonSample, dataChanged, setDataChanged}) {
     //Add states or refs here that may have to be props that are shared between components
     const carrierMap = useRef(new Map());
     const airportMap = useRef(new Map());
@@ -211,6 +213,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
+        <Reviews data={reviews}></Reviews>
         <div className="sticky-bottom">
             <p align="center"><strong>Date range select</strong></p>
             <div className="toolRow">
@@ -226,7 +229,6 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged }) {
                     <button id="dateSubmit" ref={submitBtnRef}>Submit</button>
                 </div>
             </div>
-            <div id="dateDisplay" ref={displayRef}></div>
         </div>
     </>);
 }
