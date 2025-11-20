@@ -9,6 +9,7 @@ export default function FirebaseAccess() {
     const jsonSample = useRef([]);
     const databaseRef = useRef(null);
     const [dataChanged, setDataChanged] = useState(false);
+    const docIDs = useRef([]);
 
     useLayoutEffect(() => {
         // Initialize Firebase
@@ -19,6 +20,7 @@ export default function FirebaseAccess() {
             response.text().then(data => {
                 let flightData = JSON.parse(data);
                 jsonSample.current = flightData;
+                console.log(flightData)
                 setDataChanged(true);
             });
         });
@@ -46,13 +48,16 @@ export default function FirebaseAccess() {
             const querySnapshot = query(collectionRef);
             const querySnapshotGet = getDocs(querySnapshot).then((querySnapshot) => {
                 let flightData = [];
+                let flightIDs = [];
                 querySnapshot.forEach((doc) => {
                     flightData.push(doc.data());
+                    flightIDs.push(doc.id);
                 });
-                if (flightData.length == 1 && 'data' in flightData[0]) {
-                    jsonSample.current = flightData[0].data;
+                if (flightData.length > 1) {
+                    jsonSample.current = flightData;
                     console.log(flightData);
                     setDataChanged(true);
+                    docIDs.current = flightIDs;
                 }
                 else
                 {
@@ -67,6 +72,6 @@ export default function FirebaseAccess() {
     }, []);
 
     return (<>
-        <App jsonSample={jsonSample} databaseRef={databaseRef} dataChanged={dataChanged} setDataChanged={setDataChanged} />
+        <App jsonSample={jsonSample} databaseRef={databaseRef} dataChanged={dataChanged} setDataChanged={setDataChanged} docIDs={docIDs} />
     </>);
 }

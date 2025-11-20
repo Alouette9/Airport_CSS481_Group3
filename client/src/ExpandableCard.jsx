@@ -32,7 +32,7 @@ export function ExpandableCard({ title, children, initialDisplay, expandMode, sc
         }
         else
         {
-            content.current.style.display = 'none';
+            content.current.style.visbility = 'hidden';
             setButtonIcon(<MdExpandLess/>);
         }
 
@@ -51,18 +51,17 @@ export function ExpandableCard({ title, children, initialDisplay, expandMode, sc
     
 
     useEffect(() => {
-        console.log(expand)
         if(expand)
         {
             if(expandDisplay)
             {
-                content.current.style.display = 'none';
+                content.current.style.visibility = 'collapse';
                 setButtonIcon(<MdExpandLess/>);
                 setExpandDisplay(false);
             }
             else
             {
-                content.current.style.display = 'block';
+                content.current.style.visibility = 'visible';
                 setExpandDisplay(true);
                 setButtonIcon(<MdExpandMore/>);
             }

@@ -1,9 +1,9 @@
 import './App.css';
 import { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { ExpandableCard } from './ExpandableCard';
-import { PieChart} from './PieChart';
+import { PieChart } from './PieChart';
 
-export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, carrierMap, airportMap }) {
+export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, carrierMap, airportMap}) {
 
     const airportRankList = useRef(null);
     const carrierRankList = useRef(null);
@@ -11,18 +11,17 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
     const [airportRankContent, setAirportRankContent] = useState([]);
     const [summaryContent, setSummaryContent] = useState(null);
 
-    useEffect(() => {
+    useEffect(() => {            //let rowInfo = [];
+            let top5Carrier = new Array(5);
+            let carrierFlights = new Array(5);
+            carrierFlights.fill(['', -1, -1]);
+            top5Carrier.fill(-1);
 
-        let top5Carrier = new Array(5);
-        let carrierFlights = new Array(5);
-        carrierFlights.fill(['', -1, -1]);
-        top5Carrier.fill(-1);
-
-            // Summarize relevant data by each carrier
-        carrierMap.current.forEach((value, key) => {
-            //const carrierBox = document.getElementById(key + '_CarrierCheckbox');
-            //if (carrierBox && carrierBox.checked) {                    //Make sure all summarized data only added if they are a specific carrier
-            let flights = filteredData.current.reduce((total, row) => {
+            //Summarize relevant data by each carrier
+            carrierMap.current.forEach((value, key) => {
+                //const carrierBox = document.getElementById(key + '_CarrierCheckbox');
+                //if (carrierBox && carrierBox.checked) {                    //Make sure all summarized data only added if they are a specific carrier
+                let flights = filteredData.current.reduce((total, row) => {
                     if (row.carrier === key) {
                         return total + Number(row.arr_flights);
                     }
@@ -37,60 +36,66 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
                 }, 0);
 
                 for (let i = 0; i < top5Carrier.length; i++) {
+                    //First check if ratio is larger. If equal ratio, compare the total number of flights. Prioritize higher flight number
                     if (top5Carrier[i] < delays / flights || (top5Carrier[i] == delays / flights && carrierFlights[i][2] < flights)) {
+                        //Insert into rankings
                         top5Carrier.splice(i, 0, delays / flights);
+                        //Pop the last in the rankings
                         top5Carrier.pop();
+                        //Insert carrier name, delay num, and flight num
                         carrierFlights.splice(i, 0, [value, delays, flights]);
                         carrierFlights.pop();;
                         break;
                     }
                 }
-            //}
-        });
-        //Update ranking ordered list
-        let newCarrierRanking = [];
-        for (let i = 0; i < 5; i++) {
-            if (top5Carrier[i] >= 0 && carrierFlights[i][0].trim() != '') {
-                newCarrierRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{carrierFlights[i][0]}</td><td>{(top5Carrier[i] * 100).toFixed(2)}%</td></tr>);
-            }
-        }
-        setCarrierRankContent(newCarrierRanking);
+            });
+            //Update ranking ordered list
+            //Remove previous ranking items
+            let newCarrierRanking = [];
 
-        let top5Airport = new Array(5);
-        let airportFlights = new Array(5);
-        airportFlights.fill(['', -1, -1]);
-        top5Airport.fill(-1);
-
-        airportMap.current.forEach((value, key) => {
-            let flights = filteredData.current.reduce((total, row) => {
-                if (row.airport === key) {
-                    return total + Number(row.arr_flights);
-                }
-                return total;
-            }, 0);
-
-            let delays = filteredData.current.reduce((total, row) => {
-                if (row.airport === key) {
-                    return total + Number(row.arr_del15);
-                }
-                return total;
-            }, 0);
-
-            for (let i = 0; i < top5Airport.length; i++) {
-                if (top5Airport[i] < delays / flights || (top5Airport[i] == delays / flights && airportFlights[i][2] < flights)) {
-                    top5Airport.splice(i, 0, delays / flights);
-                    top5Airport.pop();
-                    airportFlights.splice(i, 0, [value, delays, flights]);
-                    airportFlights.pop();;
-                    break;
+            for (let i = 0; i < 5; i++) {
+                if (top5Carrier[i] >= 0 && carrierFlights[i][0].trim() != '') {
+                    newCarrierRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{carrierFlights[i][0]}</td><td>{(top5Carrier[i] * 100).toFixed(2)}%</td></tr>);
                 }
             }
-        });
+            setCarrierRankContent(newCarrierRanking);
 
-        let newAirportRanking = [];
-        for (let i = 0; i < 5; i++) {
-            if (top5Airport[i] >= 0 && airportFlights[i][0].trim() != '') {
-                newAirportRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{airportFlights[i][0].split(':')[1].trim()}</td><td>{(top5Airport[i] * 100).toFixed(2)}%</td></tr>);
+            let top5Airport = new Array(5);
+            let airportFlights = new Array(5);
+            airportFlights.fill(['', -1, -1]);
+            top5Airport.fill(-1);
+
+            airportMap.current.forEach((value, key) => {
+                let flights = filteredData.current.reduce((total, row) => {
+                    if (row.airport === key) {
+                        return total + Number(row.arr_flights);
+                    }
+                    return total;
+                }, 0);
+
+                let delays = filteredData.current.reduce((total, row) => {
+                    if (row.airport === key) {
+                        return total + Number(row.arr_del15);
+                    }
+                    return total;
+                }, 0);
+
+                for (let i = 0; i < top5Airport.length; i++) {
+                    if (top5Airport[i] < delays / flights || (top5Airport[i] == delays / flights && airportFlights[i][2] < flights)) {
+                        top5Airport.splice(i, 0, delays / flights);
+                        top5Airport.pop();
+                        airportFlights.splice(i, 0, [value, delays, flights]);
+                        airportFlights.pop();;
+                        break;
+                    }
+                }
+            });
+
+            let newAirportRanking = [];
+            for (let i = 0; i < 5; i++) {
+                if (top5Airport[i] >= 0 && airportFlights[i][0].trim() != '') {
+                    newAirportRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{airportFlights[i][0].split(':')[1].trim()}</td><td>{(top5Airport[i] * 100).toFixed(2)}%</td></tr>);
+                }
             }
         }
         setAirportRankContent(newAirportRanking);
@@ -124,13 +129,12 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
                         </div>
                         <div style={{marginTop:8, fontSize:12}}><strong>Total delays:</strong> {totalDelays.toLocaleString()}</div>
                     </div>
-                </div>
-            );
-        } catch (e) {
-            console.warn('Failed to compute summary', e);
-            setSummaryContent(null);
-        }
-    }, [filterSeq, dataChanged]);
+                );
+            } catch (e) {
+                console.warn('Failed to compute summary', e);
+                setSummaryContent(null);
+            }
+        }, [filterSeq, dataChanged]);
 
     return (<>
         <div className='row center'>

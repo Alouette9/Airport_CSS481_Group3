@@ -34,25 +34,22 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
 
     // Initialize filter elements and their events
     useEffect(() => {
-        if (dataChanged) {
-            // --- Carrier checkboxes ---
-            let newCheckboxes = [];
-            let arrayKey = 0;
-            carrierMap.current.forEach((value, key) => {
-                newCheckboxes.push(
-                    <div key={arrayKey} className="expandRow">
-                        <input type="checkbox" className="carrierCheckbox"
-                               name={value + '_CarrierCheckbox'}
-                               id={key + '_CarrierCheckbox'}
-                               defaultChecked={true}
-                        />
-                        <label htmlFor={key + '_CarrierCheckbox'}>{value}</label>
-                    </div>
-                );
-                arrayKey++;
-            });
-            carrierCount.current = arrayKey;
-            setCarrierCheckBoxes(newCheckboxes);
+        if(dataChanged)
+        {
+        //Create carrier checkboxes
+        let newCheckboxes = [];
+        let arrayKey = 0;
+        carrierMap.current.forEach((value, key) => {
+            newCheckboxes.push(
+                <div key={arrayKey} className="expandRow"><input type="checkbox" className="carrierCheckbox"
+                    name={value + '_CarrierCheckbox'}
+                    id={key + '_CarrierCheckbox'}
+                    defaultChecked={true}
+                /> <label htmlFor={key + '_CarrierCheckbox'}>{value}</label></div>);
+            arrayKey++;
+        });
+        carrierCount.current = arrayKey;
+        setCarrierCheckBoxes(newCheckboxes);
 
             // --- Airport checkboxes ---
             newCheckboxes = [];
@@ -133,9 +130,18 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
                 }
             }
 
-            newFilterData = newFilterData.filter(row => airportArray.includes(row.airport));
-            newFilterData = newFilterData.filter(row => row.arr_flights >= Number(lowestFlightNum.current.value) && row.arr_flights <= Number(highestFlightNum.current.value));
-            newFilterData = newFilterData.filter(row => row.arr_del15 >= Number(lowestDelayNum.current.value) && row.arr_del15 <= Number(highestDelayNum.current.value));
+
+            newFilterData = newFilterData.filter((row) => {
+                return airportArray.includes(row.airport);
+            });
+
+            newFilterData = newFilterData.filter((row) => {
+                return row.arr_flights >= Number(lowestFlightNum.current.value) && row.arr_flights <= Number(highestFlightNum.current.value);
+            });
+
+            newFilterData = newFilterData.filter((row) => {
+                return row.arr_del15 >= Number(lowestDelayNum.current.value) && row.arr_del15 <= Number(highestDelayNum.current.value);
+            })
 
             if (typeof onFiltersApplied === 'function') onFiltersApplied(newFilterData);
 
@@ -147,7 +153,8 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
 
     // --- Select all logic remains the same ---
     useEffect(() => {
-        if (selectAllCarriers) {
+        if(selectAllCarriers)
+        {
             let carrierBoxes = carrierFilters.current.children;
             for (let i = 0; i < carrierBoxes.length; i++) {
                 if (carrierBoxes[i].tagName === 'DIV') {
@@ -162,10 +169,11 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
     }, [selectAllCarriers]);
 
     useEffect(() => {
-        if (selectAllAirports) {
+        if(selectAllAirports)
+        {
             let airportBoxes = airportFilters.current.children;
             for (let i = 0; i < airportBoxes.length; i++) {
-                if (airportBoxes[i].tagName === 'DIV') {
+                if (airportBoxes[i].tagName == 'DIV') {
                     let children = airportBoxes[i].children;
                     if (children[0].tagName === 'INPUT' && children[0].type === 'checkbox' && children[0].className === 'airportCheckbox') {
                         children[0].checked = airportAllButton.current.checked;

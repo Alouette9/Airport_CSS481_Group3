@@ -5,17 +5,17 @@ import { Prediction } from "./Prediction";
 import reviews from "./datasets/airlineReviews.json";
 import Reviews from "./Reviews";
 
-export function AirportHome({ jsonSample, dataChanged, setDataChanged}) {
+import  GeolocationRecommendation  from "./GeolocationRecommendation";
+
+export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMap, airportMap }) {
     //Add states or refs here that may have to be props that are shared between components
-    const carrierMap = useRef(new Map());
-    const airportMap = useRef(new Map());
     const filteredData = useRef(jsonSample.current);
     const filtersOnlyRef = useRef(jsonSample.current); // base for composing filters (carrier/airport/etc.)
     const [filterSeq, setFilterSeq] = useState(0)
     const latestDate = useRef([0, 0]);
     const earliestDate = useRef([9999, 32]);
     const [firstRender, setFirstRender] = useState(true);
-    
+
     // Refs for form elements
     const submitBtnRef = useRef(null);
     const beginRangeRef = useRef(null);
@@ -33,7 +33,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged}) {
 
     //To be ran only on intialization of the DOM once. 
     useLayoutEffect(() => {
-        if (dataChanged || firstRender) {
+        if ((dataChanged || firstRender) && Array.isArray(jsonSample.current) && jsonSample.current.length > 0) {
             //Iterate over JSON to gather max, min, and other display info
             for (let i = 0; i < jsonSample.current.length; i++) {
                 //Check if in the carrierMap.current and already included
@@ -209,7 +209,8 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged}) {
                 </div>
             </div>
         </div>
-        <Rankings dataChanged={dataChanged} filteredData={filteredData} filterSeq={filterSeq} setFilterSeq={setFilterSeq} carrierMap={carrierMap} airportMap={airportMap} />
+        <Rankings dataChanged={dataChanged} filteredData={filteredData} setFilterSeq={setFilterSeq} filterSeq={filterSeq} carrierMap={carrierMap} airportMap={airportMap} />
+        <GeolocationRecommendation jsonSample={jsonSample} filteredData={filteredData} filterSeq={filterSeq}/>
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
