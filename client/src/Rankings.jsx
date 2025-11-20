@@ -87,22 +87,32 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
                         airportFlights.splice(i, 0, [value, delays, flights]);
                         airportFlights.pop();;
                         break;
-                    }
-                }
-            });
+                    let newAirportRanking = [];
+for (let i = 0; i < 5; i++) {
+    if (top5Airport[i] >= 0 && airportFlights[i][0].trim() !== '') {
+        newAirportRanking.push(
+            <tr key={i}>
+                <td>{i + 1 + '.'}</td>
+                <td>{airportFlights[i][0].split(':')[1].trim()}</td>
+                <td>{(top5Airport[i] * 100).toFixed(2)}%</td>
+            </tr>
+        );
+    }
+}
 
-            let newAirportRanking = [];
-            for (let i = 0; i < 5; i++) {
-                if (top5Airport[i] >= 0 && airportFlights[i][0].trim() != '') {
-                    newAirportRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{airportFlights[i][0].split(':')[1].trim()}</td><td>{(top5Airport[i] * 100).toFixed(2)}%</td></tr>);
-                }
-            }
-        }
-        setAirportRankContent(newAirportRanking);
-        try {
-            const totalFlights = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_flights) || 0), 0);
-            const totalDelays = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_del15) || 0), 0);
-            const delayPct = totalFlights ? ((totalDelays / totalFlights) * 100).toFixed(2) : '0.00';
+// Update state inside the same function
+setAirportRankContent(newAirportRanking);
+
+try {
+    const totalFlights = filteredData.current.reduce(
+        (sum, row) => sum + (Number(row.arr_flights) || 0),
+        0
+    );
+    // ...rest of your code that uses totalFlights
+} catch (err) {
+    console.error(err);
+}
+
             const carrierSet = new Set(filteredData.current.map(r => r.carrier));
             const airportSet = new Set(filteredData.current.map(r => r.airport));
 
