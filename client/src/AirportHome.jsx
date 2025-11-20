@@ -2,6 +2,9 @@ import { useEffect, useState, useLayoutEffect, useRef, useCallback } from "react
 import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
+import reviews from "./datasets/airlineReviews.json";
+import Reviews from "./Reviews";
+
 import  GeolocationRecommendation  from "./GeolocationRecommendation";
 
 export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMap, airportMap }) {
@@ -211,6 +214,7 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
+        <Reviews data={reviews}></Reviews>
         <div className="sticky-bottom">
             <p align="center"><strong>Date range select</strong></p>
             <div className="toolRow">
@@ -226,7 +230,6 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
                     <button id="dateSubmit" ref={submitBtnRef}>Submit</button>
                 </div>
             </div>
-            <div id="dateDisplay" ref={displayRef}></div>
         </div>
     </>);
 }

@@ -97,48 +97,37 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
                     newAirportRanking.push(<tr key={i}><td>{i + 1 + '.'}</td><td>{airportFlights[i][0].split(':')[1].trim()}</td><td>{(top5Airport[i] * 100).toFixed(2)}%</td></tr>);
                 }
             }
-            setAirportRankContent(newAirportRanking);
-            try {
-                const totalFlights = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_flights) || 0), 0);
-                const totalDelays = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_del15) || 0), 0);
-                const delayPct = totalFlights ? ((totalDelays / totalFlights) * 100).toFixed(2) : '0.00';
-                const carrierSet = new Set(filteredData.current.map(r => r.carrier));
-                const airportSet = new Set(filteredData.current.map(r => r.airport));
+        }
+        setAirportRankContent(newAirportRanking);
+        try {
+            const totalFlights = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_flights) || 0), 0);
+            const totalDelays = filteredData.current.reduce((sum, row) => sum + (Number(row.arr_del15) || 0), 0);
+            const delayPct = totalFlights ? ((totalDelays / totalFlights) * 100).toFixed(2) : '0.00';
+            const carrierSet = new Set(filteredData.current.map(r => r.carrier));
+            const airportSet = new Set(filteredData.current.map(r => r.airport));
 
-                const reasonDefs = [
-                    { key: 'carrier_delay', label: 'Carrier', color: '#4e79a7' },
-                    { key: 'weather_delay', label: 'Weather', color: '#f28e2b' },
-                    { key: 'nas_delay', label: 'NAS', color: '#e15759' },
-                    { key: 'security_delay', label: 'Security', color: '#76b7b2' },
-                    { key: 'late_aircraft_delay', label: 'Late aircraft', color: '#59a14f' }
-                ];
+            const reasonDefs = [
+                { key: 'carrier_delay', label: 'Carrier'},
+                { key: 'weather_delay', label: 'Weather'},
+                { key: 'nas_delay', label: 'NAS'},
+                { key: 'security_delay', label: 'Security'},
+                { key: 'late_aircraft_delay', label: 'Late aircraft'}
+            ];
 
-                const reasonItems = reasonDefs.map(def => ({
-                    label: def.label,
-                    value: filteredData.current.reduce((s, r) => s + (Number(r[def.key]) || 0), 0),
-                    color: def.color
-                }));
+            const reasonItems = reasonDefs.map(def => ({
+                label: def.label,
+                value: filteredData.current.reduce((s, r) => s + (Number(r[def.key]) || 0), 0),
+            }));
 
-                const totalReason = reasonItems.reduce((s, it) => s + it.value, 0) || 1;
+            const totalReason = reasonItems.reduce((s, it) => s + it.value, 0) || 1;
 
-                setSummaryContent(
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                        <PieChart items={reasonItems} size={160} innerRadius={44} />
-                        <div>
-                            <h4>Delay reasons</h4>
-                            <table className='delayReasons'>
-                                <tbody>
-                                    {reasonItems.map((it, idx) => (
-                                        <tr key={idx}>
-                                            <td style={{ width: '14px' }}><span style={{ display: 'inline-block', width: 12, height: 12, background: it.color, marginRight: 8 }}></span></td>
-                                            <td>{it.label}</td>
-                                            <td style={{ paddingLeft: 12 }}>{it.value.toLocaleString()} ({((it.value / totalReason) * 100).toFixed(1)}%)</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            <div style={{ marginTop: 8, fontSize: 12 }}><strong>Total delays:</strong> {totalDelays.toLocaleString()}</div>
+            setSummaryContent(
+                <div style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
+                    <div>
+                        <div id="chartdiv">
+                            <PieChart data={reasonItems} />
                         </div>
+                        <div style={{marginTop:8, fontSize:12}}><strong>Total delays:</strong> {totalDelays.toLocaleString()}</div>
                     </div>
                 );
             } catch (e) {
