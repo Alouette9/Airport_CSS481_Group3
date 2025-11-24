@@ -41,7 +41,7 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
         let arrayKey = 0;
         carrierMap.current.forEach((value, key) => {
             newCheckboxes.push(
-                <div key={arrayKey} className="expandRow"><input type="checkbox" className="carrierCheckbox"
+                <div key={arrayKey} className="uncoloredExpandRow"><input type="checkbox" className="carrierCheckbox"
                     name={value + '_CarrierCheckbox'}
                     id={key + '_CarrierCheckbox'}
                     defaultChecked={true}
@@ -56,7 +56,7 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
             arrayKey = 0;
             airportMap.current.forEach((value, key) => {
                 newCheckboxes.push(
-                    <div key={arrayKey} className="expandRow">
+                    <div key={arrayKey} className="uncoloredExpandRow">
                         <input type="checkbox" className="airportCheckbox"
                                name={value + '_AirportDRCheckbox'}
                                id={key + '_AirportDRCheckbox'}
@@ -185,9 +185,9 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
     }, [selectAllAirports]);
 
     return (
-        <div className="center">
+        <div className="center filterDiv">
             <div className="flexRow filterBar">
-                <h3>Filters</h3>
+                <h3 className="expandTitleText">Filters</h3>
 
                 {/* --- Airports dropdown --- */}
                 <ExpandableDrop
@@ -199,7 +199,7 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
                     style={{ zIndex: dropdownZIndexes['airportsDrop'] || 1 }}
                 >
                     <div className="flexColumnScroll dropBorder" ref={airportFilters}>
-                        <div className="expandRow">
+                        <div className="uncoloredExpandRow">
                             <input type="checkbox" ref={airportAllButton} name="selectAllAirports" defaultChecked={true} />
                             <label htmlFor='selectAllAirports'>Select All</label>
                         </div>
@@ -217,7 +217,7 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
                     style={{ zIndex: dropdownZIndexes['carriersDrop'] || 1 }}
                 >
                     <div className="flexColumnScroll dropBorder" ref={carrierFilters}>
-                        <div className="expandRow">
+                        <div className="uncoloredExpandRow">
                             <input type="checkbox" ref={carrierAllButton} name="selectAllCarriers" defaultChecked={true} />
                             <label htmlFor='selectAllCarriers'>Select All</label>
                         </div>
@@ -234,7 +234,7 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
                     onClick={() => handleDropdownClick('flightsDrop')}
                     style={{ zIndex: dropdownZIndexes['flightsDrop'] || 1 }}
                 >
-                    <div className="expandRow dropBorder">
+                    <div className="uncoloredExpandRow dropBorder">
                         <input type="number" ref={lowestFlightNum} name="lowestFlightNum" defaultValue={0} min={0} />
                         <p>-</p>
                         <input type="number" ref={highestFlightNum} name="highestFlightNum" defaultValue={1000000} min={0} />
@@ -250,7 +250,7 @@ export function Filters({ setFilterSeq, dataChanged, carrierMap, airportMap, set
                     onClick={() => handleDropdownClick('delaysDrop')}
                     style={{ zIndex: dropdownZIndexes['delaysDrop'] || 1 }}
                 >
-                    <div className="expandRow dropBorder">
+                    <div className="uncoloredExpandRow dropBorder">
                         <input type="number" ref={lowestDelayNum} name="lowestDelayNum" defaultValue={0} min={0} />
                         <p>-</p>
                         <input type="number" ref={highestDelayNum} name="highestDelayNum" defaultValue={1000000} min={0} />

@@ -3,7 +3,7 @@ import { ExpandableCard } from './ExpandableCard';
 
 function Reviews({ data }) {
     return (
-        <ExpandableCard title={'Airline Reviews'} initialDisplay={true} expandMode={'static'} widthPercent={45} minheightPercent={40}
+        <ExpandableCard title={'Airline Reviews'} initialDisplay={true} expandMode={'static'} widthPercent={45} minheightPercent={45}
         scrollable = {true}>
             {data.map((review, index) => (
                 <div key={index} className="review">

@@ -205,24 +205,24 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
                 </div>
             </div>
         </div>
-        <Rankings dataChanged={dataChanged} filteredData={filteredData} setFilterSeq={setFilterSeq} filterSeq={filterSeq} carrierMap={carrierMap} airportMap={airportMap} />
-        <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
+        <Rankings dataChanged={dataChanged} filteredData={filteredData} setFilterSeq={setFilterSeq} filterSeq={filterSeq} carrierMap={carrierMap} airportMap={airportMap} />
+        <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <div className="sticky-bottom">
-            <p align="center"><strong>Date range select</strong></p>
             <div className="toolRow">
                 <div className="slidersControl">
                     <input type="range" id="dateBeginRange" ref={beginRangeRef} />
                     <input type="range" id="dateEndRange" ref={endRangeRef} />
                 </div>
                 <div className="formControl">
-                    <span id="dateBeginLabel"></span>
-                    to
-                    <span id="dateEndLabel"></span>
+                    <span id="dateBeginLabel" className="dateLabel"></span>
+                    <span className="dateLabel">-</span>
+                    <span id="dateEndLabel" className="dateLabel"></span>
                     &nbsp;
-                    <button id="dateSubmit" ref={submitBtnRef}>Submit</button>
+                    
                 </div>
+                <button id="dateSubmit" ref={submitBtnRef}>Submit</button>
             </div>
         </div>
     </>);

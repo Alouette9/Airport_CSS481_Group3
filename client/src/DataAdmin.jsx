@@ -27,6 +27,8 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
     const lateTime = useRef(null);
     const divertedNum = useRef(null);
     const [newEntry, setNewEntry] = useState(false);
+    const messageRef = useRef(null);
+    const containerRef = useRef(null);
 
     const [carrierOptions, setCarrierOptions] = useState([]);
     const [airportOptions, setAirportOptions] = useState([]);
@@ -54,6 +56,9 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
     useLayoutEffect(() => {
         if (airportUpdate.current) {
             airportUpdate.current.style.display = 'none';
+        }
+        if (tableRef.current) {
+            containerRef.current.style.display = 'none';
         }
     }, []);
 
@@ -587,7 +592,24 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
                 </tr>);
             });
 
-            setTableBody(newTableBody);
+            if (results.length == 0) {
+                setTableBody(null);
+                if (tableRef.current) {
+                    containerRef.current.style.display = 'none';
+                }
+                if(messageRef.current) {
+                    messageRef.current.textContent = "No matching entries found.";
+                }
+            }
+            else {
+                if (tableRef.current) {
+                    containerRef.current.style.display = 'block';
+                }
+                setTableBody(newTableBody);
+                if(messageRef.current) {
+                    messageRef.current.textContent = "";
+                }
+            }
             setSearchData(false);
         }
     }, [searchData]);
@@ -739,7 +761,7 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
         <div className='flexRow'>
             <button onClick={() => setDeleteData(true)}>Delete</button>
         </div>
-        <div className="overFlowBox">
+        <div className="overFlowBox" ref={containerRef}>
             <table ref={tableRef}>
                 <thead>
                     <tr>
@@ -770,6 +792,7 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
                     {tableBody}
                 </tbody>
             </table>
+            <p ref={messageRef}></p>
         </div>
     </>);
 }

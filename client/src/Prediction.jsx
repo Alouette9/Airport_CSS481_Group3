@@ -140,9 +140,9 @@ export function Prediction({ jsonSample, carrierMap, airportMap, earliestDate, l
 
   return (
     <div className="row center">
-      <ExpandableCard title={"Prediction"} initialDisplay={true} expandMode={"static"}>
-        <form className="expandRow" onSubmit={onSubmit}>
-          <div className="expandRow">
+      <ExpandableCard title={"Prediction"} initialDisplay={true} expandMode={"static"} widthPercent={90}>
+        <form className="flexRow" onSubmit={onSubmit}>
+          <div className="row">
             <label htmlFor="pred-carrier">Carrier</label>
             <select id="pred-carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)}>
               {carrierOptions.map((o) => (
@@ -151,7 +151,7 @@ export function Prediction({ jsonSample, carrierMap, airportMap, earliestDate, l
             </select>
           </div>
 
-          <div className="expandRow">
+          <div className="row">
             <label htmlFor="pred-airport">Airport</label>
             <select id="pred-airport" value={airport} onChange={(e) => setAirport(e.target.value)}>
               {airportOptions.map((o) => (
@@ -160,7 +160,7 @@ export function Prediction({ jsonSample, carrierMap, airportMap, earliestDate, l
             </select>
           </div>
 
-          <div className="expandRow">
+          <div className="row">
             <label htmlFor="pred-month">Month</label>
             <select id="pred-month" value={ym} onChange={(e) => setYm(e.target.value)}>
               {monthOptions.map((o) => (
@@ -169,7 +169,7 @@ export function Prediction({ jsonSample, carrierMap, airportMap, earliestDate, l
             </select>
           </div>
 
-          <div className="expandRow">
+          <div className="row">
             <label htmlFor="pred-reason">Delay Reason</label>
             <select id="pred-reason" value={reason} onChange={(e) => setReason(e.target.value)}>
               {reasonOptions.map((o) => (
@@ -178,14 +178,14 @@ export function Prediction({ jsonSample, carrierMap, airportMap, earliestDate, l
             </select>
           </div>
 
-          <div className="expandRow" style={{ gap: 8, marginTop: 8 }}>
+          <div className="row" style={{ gap: 8, marginTop: 8 }}>
             <button type="submit">Submit</button>
             <button type="button" onClick={onReset}>Reset</button>
           </div>
         </form>
 
         {result && (
-          <div className="expandRow" style={{ marginTop: 12 }}>
+          <div className="row" style={{ marginTop: 12 }}>
             <div className="card" style={{ padding: 12 }}>
               <div><strong>Estimated delay per delayed flight:</strong> {result.minutes} min</div>
               <div style={{ opacity: 0.8 }}>Baseline: {result.baseline} min</div>

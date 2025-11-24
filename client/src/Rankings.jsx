@@ -108,7 +108,7 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
 
         try {
             setSummaryContent(
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', overflow:'scroll', minWidth:'calc(45vw - 10px)', minHeight:'calc(45vh - 10px)' }}>
                     <div>
                         <div id="chartdiv">
                             <PieChart data={reasonItems} />
@@ -146,7 +146,7 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
             </div>
             <div className='row center'>
                 <div id='summaryCard' className='card'>
-                    <ExpandableCard title={'Delay Reasons'} initialDisplay={true} expandMode={'static'} widthPercent={45} minheightPercent={40}>
+                    <ExpandableCard title={'Delay Reasons'} initialDisplay={true} expandMode={'static'} widthPercent={45} minheightPercent={45}>
                         {summaryContent}
                     </ExpandableCard>
                 </div>

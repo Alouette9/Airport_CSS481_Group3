@@ -69,7 +69,7 @@ export function ExpandableDrop({ title, children, initialDisplay, expandMode }) 
     
     return (<>
         <div className="expandTitle">
-            <div ref={expandSection} className="expandRow">
+            <div ref={expandSection} className="uncoloredExpandRow">
                 <button ref={expandButton} className="dropDownButton">{buttonIcon}</button>
                 <h4 ref={expandText} className="expandText">{title}</h4>
             </div>

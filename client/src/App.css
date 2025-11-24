@@ -5,11 +5,12 @@ html, body, #root {
     padding: 0;
       height: 100%;
       width: 100%;
-  padding-bottom: 20%;
+  height: max-content;
+  background-color: #d7ecff;
 }
 
 body {
-    padding-bottom: 400px;
+    padding-bottom: 150px;
 }
 
 .flexBox {
@@ -31,12 +32,44 @@ body {
     margin-top: 5px;
     margin-left: 5px;
     margin-left: 5px;
-    gap: 30px;
     align-items: center;
     flex-wrap: wrap;
+    gap:10px
 }
 
 .expandRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width:100%;
+    height: fit-content;
+    background-color: #387bbe;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.expandTitleText {
+  color: white;
+}
+
+.expandButton {
+  background-color: transparent;
+}
+.expandButton:hover {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline:none;
+}
+.expandButton:focus {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
+
+
+.uncoloredExpandRow {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -57,15 +90,7 @@ body {
 }
 
 
-.filterBar {
-    width: fit-content;
-    padding-right: 10px;
-    padding-left: 10px;
-    background-color: rgb(234, 234, 234);
-    justify-content: center;
-    border-style:hidden;
-    border-radius: 1%;
-}
+
 
 .rankingList table, 
 .rankingList tr, 
@@ -76,11 +101,11 @@ body {
 }
 
 .cardContent {
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 2%;
-    border-color: grey;
+    background-color: rgb(235, 254, 255);
     width: fit-content;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding-bottom:10px;
 }
 
 .flexColumnScroll {
@@ -125,10 +150,14 @@ body {
 }
 
 .dropBorder {
-    background-color: white;
-    border-color: grey;
-    border-style: solid;
-    border-radius: 2%;
+    background-color: rgb(235, 254, 255);
+    width: fit-content;
+    box-shadow: 0px 0px 8px 2px rgb(114, 114, 114);
+}
+
+option {
+    box-shadow: 0px 0px 8px 2px rgb(114, 114, 114);
+    background-color: rgb(235, 254, 255);
 }
 
 .dropDownButton {
@@ -142,6 +171,7 @@ body {
     text-align: center;
     padding: 0em 0em;
     border-radius: 0;
+    background-color: white;
 }
 
 .filterButton {
@@ -155,6 +185,18 @@ body {
     padding-left: 10px;
     padding-right: 10px;
     font-size: 20px;
+}
+
+.filterBar {
+    width: fit-content;
+    background-color: #387bbe;
+    justify-content: center;
+    border-style:hidden;
+}
+
+.filterDiv {
+  background-color: #387bbe;
+  border-radius: 10px;
 }
 
 .bannerContainer {
@@ -255,10 +297,15 @@ h2 {
     border-bottom: blue solid 4px;
 }
 
+
 .expandTitle {
-    border-color: grey;
-    border-width: 3px;
+   gap:0px;
 }
+
+h4 {
+    margin: 0px 0px 0px 0px;
+}
+
 
 /* Sticky config for the date slider */
 .sticky-bottom {
@@ -266,10 +313,15 @@ h2 {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #f0f0f0;
+  background-color: rgba(188, 239, 255, 0.95);
   padding: 5px;
   color:rgb(70, 70, 70);
   z-index: 1000; /* Ensures it's on top of other elements */
+}
+
+.dateLabel {
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .formControl button { margin-left: 4px; }
@@ -304,8 +356,7 @@ h2 {
 
 .slidersControl {
   position: relative;
-  width: 85%;
-  max-width: 600px;
+  width: 90%;
   height: 32px;
   display: flex;
   align-items: center;

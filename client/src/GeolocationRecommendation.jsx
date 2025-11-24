@@ -78,9 +78,7 @@ export default function GeolocationRecommendation({ filterSeq, filteredData }) {
 
             if(carrierPerformance.length == 0 && airportPerformance.length == 0)
             {
-                setRecContent(<div>
-                    <h4>We could not find any carrier or airport data for your the {regionName.current} region with the current data.</h4>
-                </div>);
+                setRecContent(<h4>We could not find any carrier or airport data for your the {regionName.current} region with the current data.</h4>);
                 return;
             }
 
