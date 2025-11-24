@@ -2,10 +2,6 @@ import { useEffect, useState, useLayoutEffect, useRef, useCallback } from "react
 import { Rankings } from './Rankings';
 import { Filters } from "./Filters";
 import { Prediction } from "./Prediction";
-import reviews from "./datasets/airlineReviews.json";
-import Reviews from "./Reviews";
-
-import  GeolocationRecommendation  from "./GeolocationRecommendation";
 
 export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMap, airportMap }) {
     //Add states or refs here that may have to be props that are shared between components
@@ -210,11 +206,9 @@ export function AirportHome({ jsonSample, dataChanged, setDataChanged, carrierMa
             </div>
         </div>
         <Rankings dataChanged={dataChanged} filteredData={filteredData} setFilterSeq={setFilterSeq} filterSeq={filterSeq} carrierMap={carrierMap} airportMap={airportMap} />
-        <GeolocationRecommendation jsonSample={jsonSample} filteredData={filteredData} filterSeq={filterSeq}/>
         <Prediction jsonSample={jsonSample} carrierMap={carrierMap} airportMap={airportMap} earliestDate={earliestDate} latestDate={latestDate} filteredData={filteredData} />
         <Filters setFilterSeq={setFilterSeq} dataChanged={dataChanged} jsonSample={jsonSample}
         carrierMap={carrierMap} airportMap={airportMap} filteredData={filteredData} setDataChanged={setDataChanged} onFiltersApplied={onFiltersApplied}></Filters>
-        <Reviews data={reviews}></Reviews>
         <div className="sticky-bottom">
             <p align="center"><strong>Date range select</strong></p>
             <div className="toolRow">

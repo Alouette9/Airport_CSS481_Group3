@@ -2,6 +2,9 @@ import './App.css';
 import { useRef, useState, useEffect } from 'react';
 import { ExpandableCard } from './ExpandableCard';
 import { PieChart } from './PieChart';
+import GeolocationRecommendation from "./GeolocationRecommendation";
+import reviews from "./datasets/airlineReviews.json";
+import Reviews from "./Reviews";
 
 export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, carrierMap, airportMap }) {
 
@@ -126,29 +129,28 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
     return (
         <>
             <div className='row center'>
-                <div id='airportRanking' className='card'>
-                    <ExpandableCard title={'Airport Delay Ranking'} initialDisplay={true} expandMode={'static'}>
+                    <ExpandableCard title={'Airport Delay Ranking'} initialDisplay={true} expandMode={'static'} widthPercent={30} minheightPercent={23}>
                         <table id='airportRankingList' ref={airportRankList} className='rankingList'>
                             <tbody>{airportRankContent}</tbody>
                         </table>
                         <p>*Rankings calculated by number of delays divided by total flights</p>
                     </ExpandableCard>
-                </div>
 
-                <div id='carrierRanking'>
-                    <ExpandableCard title={'Carrier Delay Ranking'} initialDisplay={true} expandMode={'static'}>
+                    <ExpandableCard title={'Carrier Delay Ranking'} initialDisplay={true} expandMode={'static'} widthPercent={30} minheightPercent={23}>
                         <table className='rankingList' id='carrierRankingList' ref={carrierRankList}>
                             <tbody>{carrierRankContent}</tbody>
                         </table>
                         <p>*Rankings calculated by number of delays divided by total flights</p>
                     </ExpandableCard>
-                </div>
-
+                    <GeolocationRecommendation filteredData={filteredData} filterSeq={filterSeq}/>
+            </div>
+            <div className='row center'>
                 <div id='summaryCard' className='card'>
-                    <ExpandableCard title={'Delay Reasons'} initialDisplay={true} expandMode={'static'}>
+                    <ExpandableCard title={'Delay Reasons'} initialDisplay={true} expandMode={'static'} widthPercent={45} minheightPercent={40}>
                         {summaryContent}
                     </ExpandableCard>
                 </div>
+                <Reviews data={reviews}></Reviews>
             </div>
         </>
     );

@@ -1,7 +1,7 @@
 import { use, useEffect, useState, useRef } from "react";
 import { ExpandableCard } from "./ExpandableCard";
 
-export default function GeolocationRecommendation({ filterSeq, filteredData, jsonSample }) {
+export default function GeolocationRecommendation({ filterSeq, filteredData }) {
     const [recContent, setRecContent] = useState([]);
     const region = useRef(null);
     const regionName = useRef(null);
@@ -154,7 +154,7 @@ export default function GeolocationRecommendation({ filterSeq, filteredData, jso
     }
 
     return (
-        <ExpandableCard title={locationTitle} initialDisplay={true} expandMode={'static'}>
+        <ExpandableCard title={locationTitle} initialDisplay={true} expandMode={'static'} widthPercent={30} minheightPercent={23}>
             {recContent}
         </ExpandableCard>
     )
