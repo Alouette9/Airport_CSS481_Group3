@@ -10,13 +10,14 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 am4core.useTheme(am4themes_animated);
 
-export function PieChart({ data = null, items = null, width = 350, height = 350 }) {
+export function PieChart({ data = null, items = null, width = 400, height = 400 }) {
         const containerRef = useRef(null);
         const chartRef = useRef(null);
 
         useLayoutEffect(() => {
                 const chart = am4core.create(containerRef.current, am4charts.PieChart);
                 chart.rtl = false;
+                chart.radius = am4core.percent(70);
 
                 const input = items || data || [];
                 chart.data = input.map(it => ({ category: it.label || it.category || '', value: Number(it.value) || 0, color: it.color }));
@@ -27,6 +28,11 @@ export function PieChart({ data = null, items = null, width = 350, height = 350 
                 pieSeries.slices.template.propertyFields.fill = 'color';
                 pieSeries.slices.template.states.getKey('active').properties.shiftRadius = 0;
                 pieSeries.slices.template.tooltipText = '{category}: {value}';
+                
+                // labels
+                pieSeries.labels.template.text = "{value.percent.formatNumber('#.0')}%"
+                pieSeries.labels.template.fontSize = 11;
+                pieSeries.alignLabels = false;
 
                 // legend
                 chart.legend = new am4charts.Legend();
