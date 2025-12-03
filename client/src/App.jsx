@@ -1,4 +1,5 @@
 import './App.css'
+import DataAdmin from './DataAdmin';
 import { About } from './About';
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
 import { AirportTables } from './AirportTables';
