@@ -13,6 +13,7 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
     const [carrierRankContent, setCarrierRankContent] = useState([]);
     const [airportRankContent, setAirportRankContent] = useState([]);
     const [summaryContent, setSummaryContent] = useState(null);
+    const [reviewsData, setReviewsData] = useState(Array.isArray(reviews) ? reviews.slice() : []);
 
     useEffect(() => {
 
@@ -125,6 +126,17 @@ export function Rankings({ filteredData, dataChanged, filterSeq, setFilterSeq, c
         }
 
     }, [filterSeq, dataChanged]);
+
+    function handleAddReview(review) {
+        // update local state so Reviews display updates
+        setReviewsData(prev => [review, ...prev]);
+        // also update the imported reviews array in-memory (non-persistent)
+        try {
+            if (Array.isArray(reviews)) reviews.unshift(review);
+        } catch (e) {
+            // ignore
+        }
+    }
 
     return (
         <>
