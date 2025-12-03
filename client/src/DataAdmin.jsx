@@ -597,7 +597,7 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
                 if (tableRef.current) {
                     containerRef.current.style.display = 'none';
                 }
-                if(messageRef.current) {
+                if (messageRef.current) {
                     messageRef.current.textContent = "No matching entries found.";
                 }
             }
@@ -606,7 +606,7 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
                     containerRef.current.style.display = 'block';
                 }
                 setTableBody(newTableBody);
-                if(messageRef.current) {
+                if (messageRef.current) {
                     messageRef.current.textContent = "";
                 }
             }
@@ -638,6 +638,13 @@ export default function DataAdmin({ jsonSample, databaseRef, docIDs, carrierMap,
     }, [selectChange]);
 
     return (<>
+        <div className="bannerHeader">
+            <div className="row">
+                <h1>Admin Data Management</h1>
+                <div className="bannerContainer">
+                </div>
+            </div>
+        </div>
         <h2>Create Data</h2>
         <div className="leftAlign">
             <div className="gridColumn">

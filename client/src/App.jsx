@@ -36,7 +36,7 @@ export default function App({jsonSample, databaseRef, dataChanged, setDataChange
                 <li><NavLink to="/" end className={navClass} onClick={(e) => {flyTo(e, '/')}}>Home</NavLink></li>
                 <li><NavLink to="/tables" className={navClass} onClick={(e) => {flyTo(e, '/tables')}}>Tables</NavLink></li>
                 <li><NavLink to="/about" className={navClass} onClick={(e) => flyTo(e, '/about')}>About</NavLink></li>
-                <li><NavLink to="/about" className={navClass} onClick={(e) => flyTo(e, '/admin')}>Admin</NavLink></li>
+                <li><NavLink to="/admin" className={navClass} onClick={(e) => flyTo(e, '/admin')}>Admin</NavLink></li>
             </ul>
 
             <Routes>

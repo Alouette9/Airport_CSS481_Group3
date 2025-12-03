@@ -1416,8 +1416,9 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
                     <input type="checkbox" defaultChecked={true} id="carrierSelectAll" name="carrierSelectAll"></input>
                     <label htmlFor="carrierSelectAll">Select All</label> <br />
                 </div>
+                <div className="flexRow">
                 <label htmlFor="carrierOrderBy">Order By:</label>
-                <div className="toolRow">
+                
                     <select name="carrierOrderBy" id="carrierOrderBy" defaultValue={'carrierName'}>
                         <option value="carrierName">Carrier Name</option>
                         <option value="carrierFlights">Flights</option>
@@ -1443,12 +1444,13 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
 
             <div id="delayReasonsView" className="box">
                 <h2>Data by Delay Reasons</h2>
+                <div className="flexRow">
                 <label htmlFor="carrierOrderBy">Order By:</label>
                 <select name="delayReasonsSelect" id="delayReasonsSelect" defaultValue={'allDelays'}>
                     <option value="allDelays">All Data</option>
                     <option value="airportDelays">Airport</option>
                     <option value="carrierDelays">Carrier</option>
-                </select>
+                </select></div>
 
                 <div id="delayAirportCheckboxes">
                     <h3>Airports</h3>
@@ -1461,7 +1463,7 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
                     <input type="checkbox" defaultChecked={true} id="delayCarrierSelectAll" name="delayCarrierSelectAll"></input>
                     <label htmlFor="delayCarrierSelectAll">Select All</label> <br />
                 </div>
-                <div className="toolRow">
+                <div className="flexRow">
                     <label htmlFor="delayBeginMonth">Time Range: </label>
                     <input type="month" name="delayBeginMonth" id="delayBeginMonth" />
                     to
@@ -1475,7 +1477,7 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
                 <h2>Data by Number of Delays</h2>
 
                 <label><input type="checkbox" id="delayNumSelectAll"defaultChecked={true}/> Select All</label>
-                <div className="toolRow">
+                <div className="flexRow">
                     <label>Order By:</label>
                     <select id="delayNumOrderBy">
                         <option value="carrierName">Carrier Name</option>
@@ -1504,7 +1506,7 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
                 <h2>Data by Time of Delays</h2>
 
                 <label><input type="checkbox" id="delayTimeSelectAll"defaultChecked={true}/> Select All</label>
-                <div className="toolRow">
+                <div className="flexRow">
                     <label>Order By:</label>
                     <select id="delayTimeOrderBy">
                         <option value="carrierName">Carrier Name</option>
@@ -1531,7 +1533,7 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
 
             <div id="dateView" className="box">
                 <h2>Flight Data by Date</h2>
-                <div className="toolRow">
+                <div className="flexRow">
                     <label htmlFor="dateBeginMonth">Time Range: </label>
                     <input type="month" name="dateBeginMonth" id="dateBeginMonth" />
                     to
@@ -1545,7 +1547,7 @@ export function AirportTables({ jsonSample, dataChanged, setDataChanged }) {
             <div id="flightNumView" className="box">
                 <h2>Data by Number of Flights</h2>
 
-                <div className="toolRow">
+                <div className="flexRow">
                     <label htmlFor="flightNumBegin">Range of Number of Flights: </label>
                     <input type="number" name="flightNumBegin" id="flightNumBegin" min="0" step="10" defaultValue={0} />
                     to
